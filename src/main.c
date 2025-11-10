@@ -6,7 +6,7 @@
 */
 
 #include "raylib.h"
-
+#include <stdio.h>
 
 
 
@@ -31,14 +31,26 @@ int main(void){
     SetTargetFPS(30);
     
     GameState currentState = LOGO;
-
+    float timer = 0.0; 
     while (!WindowShouldClose()){
         BeginDrawing();
+        printf("state: %d", currentState);
         switch (currentState){
-            //Código principal del juego
+            //main game code
             case LOGO:
+                        timer += GetFrameTime(); // raylib function to get time since last frame
+                        printf("timer: %f", timer);
+                        ClearBackground(BLACK);
+                        DrawText("RAYLIB LOGO", screenWidth / 2 - MeasureText("RAYLIB LOGO", 20) / 2, screenHeight / 2, 20, WHITE);
+
+                        if (timer > 2.0f) { // Display for 2 seconds
+                            currentState = SPLASH;
+                            timer = 0.0f; // Reset timer for the next state
+                        }
                 break;
             case SPLASH:
+                        ClearBackground(BLACK);
+                        DrawText("----------", screenWidth / 2 - MeasureText("------------", 20) / 2, screenHeight / 2, 20, WHITE);
                 break;
             case PLAYING:
                 break;
