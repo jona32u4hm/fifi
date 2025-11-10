@@ -10,13 +10,9 @@
 
 
 
-typedef enum {
-    LOGO,
-    SPLASH,
-    PLAYING,
-    PAUSED, 
-    GAMEOVER
-} GameState;
+#include "game_data.h"
+#include "logo_screen.h"
+
 
 
 
@@ -32,21 +28,20 @@ int main(void){
     
     GameState currentState = LOGO;
     float timer = 0.0; 
+    float alpha = 0.0f; // Initialize alpha to fully transparent (0.0)
     while (!WindowShouldClose()){
         BeginDrawing();
         printf("state: %d", currentState);
         switch (currentState){
             //main game code
             case LOGO:
-                        timer += GetFrameTime(); // raylib function to get time since last frame
-                        printf("timer: %f", timer);
+                        UpdateLogoScreen(&timer, &alpha, &currentState);
                         ClearBackground(BLACK);
-                        DrawText("RAYLIB LOGO", screenWidth / 2 - MeasureText("RAYLIB LOGO", 20) / 2, screenHeight / 2, 20, WHITE);
+                        // Create a color with the calculated alpha value (0 to 255)
+                        int alphaByte = (int)(alpha * 255.0f);
+                        Color logoColor = { 255, 255, 255, alphaByte }; // White color with current alpha
 
-                        if (timer > 2.0f) { // Display for 2 seconds
-                            currentState = SPLASH;
-                            timer = 0.0f; // Reset timer for the next state
-                        }
+                        DrawText("logo", screenWidth / 2 - MeasureText("logo", 40) / 2, screenHeight / 2, 40, logoColor);
                 break;
             case SPLASH:
                         ClearBackground(BLACK);
