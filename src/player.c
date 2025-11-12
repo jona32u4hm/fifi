@@ -1,19 +1,6 @@
 #include <raylib.h>
-//The textures struct will be included inside the entity struct
-typedef struct textures {
-    Texture2D texture_up;
-    Texture2D texture_down;
-    Texture2D texture_side;
-} textures;
+#include <entities.h>
 
-//entity contains all player info
-typedef struct entity {
-    float direction;
-    struct textures textures;
-    Texture2D current_texture; //Says what texture will be drawn
-    Rectangle dest_rect;
-    float hp;
-} entity; 
 //move_player changes player position, direction and current texture
 void move_player(entity* player, Camera2D* camera) {
     if (IsKeyDown(KEY_W)){
