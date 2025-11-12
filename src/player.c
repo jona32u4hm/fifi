@@ -15,24 +15,29 @@ typedef struct entity {
     float hp;
 } entity; 
 //move_player changes player position, direction and current texture
-void move_player(entity* player) {
+void move_player(entity* player, Camera2D* camera) {
     if (IsKeyDown(KEY_W)){
         player->dest_rect.y += -100 * GetFrameTime();
         player->current_texture = player->textures.texture_up;
+	camera->target.y += -100 * GetFrameTime();
     }
     if (IsKeyDown(KEY_A)){
         player->dest_rect.x += -100 * GetFrameTime();
         player->current_texture = player->textures.texture_side;
         player->direction = 1;
+	camera->target.x += -100 * GetFrameTime();
+
     }
     if (IsKeyDown(KEY_S)){
         player->dest_rect.y += 100 * GetFrameTime();
         player->current_texture = player->textures.texture_down;
+	camera->target.y += 100 * GetFrameTime();
     }
     if (IsKeyDown(KEY_D)){
         player->dest_rect.x += 100 * GetFrameTime();
         player->current_texture = player->textures.texture_side;
         player->direction = -1;
+	camera->target.x += 100 * GetFrameTime();
     }
 }
 //move_player changes alien position, direction and current texture
@@ -63,6 +68,11 @@ int main(void) {
 
     InitWindow(600, 400, "Main window");
     SetTargetFPS(30);
+    Camera2D camera = {0};
+    camera.target = (Vector2){0.0f, 0.0f};
+    camera.offset = (Vector2){0.0f, 0.0f};
+    camera.zoom = 1.0f;
+
     //Loading player textures
     Texture2D player_up = LoadTexture("assets/pixelart/t_up_0.png");
     Texture2D player_down = LoadTexture("assets/pixelart/t_down_0.png");
@@ -116,8 +126,9 @@ int main(void) {
     while(!WindowShouldClose()) {
         BeginDrawing();
             ClearBackground(RAYWHITE);
+	    BeginMode2D(camera);
             if (player.hp > 0) {
-                move_player(&player);
+                move_player(&player, &camera);
                 DrawTexturePro(player.current_texture, (Rectangle){0, 0, player.direction * 16, 16}, player.dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
 }
 
@@ -125,7 +136,7 @@ int main(void) {
                 move_alien(&alien);
                 DrawTexturePro(alien.current_texture, (Rectangle){0, 0, alien.direction * 16, 16}, alien.dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
 }
-
+	    EndMode2D();
         EndDrawing();
     };
 
