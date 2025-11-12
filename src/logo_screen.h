@@ -6,7 +6,7 @@
 #define LOGO_SCREEN_H
 
 
-void UpdateLogoScreen(float *timer, float *alpha, GameState *currentState);
+void UpdateLogoScreen(float *timer, float *alpha, GameState *currentState, Texture2D *logoTexture);
 
 
 

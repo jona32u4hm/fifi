@@ -13,39 +13,52 @@
 #include "game_data.h"
 #include "logo_screen.h"
 
+// --- PIXEL ART ENGINE CONFIGURATION ---
+#define GAME_WIDTH 160
+#define GAME_HEIGHT 90
+#define PIXEL_SCALE 5 // The fixed multiplier for rendering (e.g., 5X scale)
+// --------------------------------------
 
-
-
+// --- Textures --- 
+Texture2D logoTexture;
+//----------------
 
 
 
 int main(void){
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+	const int screenWidth = GAME_WIDTH * PIXEL_SCALE;
+    const int screenHeight = GAME_HEIGHT * PIXEL_SCALE;
    
     InitWindow(screenWidth, screenHeight, "FINDING FIFI");
     SetTargetFPS(30);
+	
+	RenderTexture2D target = LoadRenderTexture(GAME_WIDTH, GAME_HEIGHT);	//la pantalla virtual de baja resolución
+    SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);    // para evitar que se vea borroso
+    
     
     GameState currentState = LOGO;
     float timer = 0.0; 
     float alpha = 0.0f; // Initialize alpha to fully transparent (0.0)
     while (!WindowShouldClose()){
-        BeginDrawing();
-        printf("state: %d", currentState);
+
+	//dibujar sobre pantalla virtual:
+        BeginTextureMode(target);
         switch (currentState){
             //main game code
             case LOGO:
-                        UpdateLogoScreen(&timer, &alpha, &currentState);
+                        UpdateLogoScreen(&timer, &alpha, &currentState, &logoTexture);
                         ClearBackground(BLACK);
                         // Create a color with the calculated alpha value (0 to 255)
                         int alphaByte = (int)(alpha * 255.0f);
                         Color logoColor = { 255, 255, 255, alphaByte }; // White color with current alpha
-
-                        DrawText("logo", screenWidth / 2 - MeasureText("logo", 40) / 2, screenHeight / 2, 40, logoColor);
+						DrawTexture(logoTexture, 
+								    (GAME_WIDTH/2) - (logoTexture.width/2), 
+								    (GAME_HEIGHT/2) - (logoTexture.height/2), 
+								    logoColor);
                 break;
             case SPLASH:
                         ClearBackground(BLACK);
-                        DrawText("----------", screenWidth / 2 - MeasureText("------------", 20) / 2, screenHeight / 2, 20, WHITE);
+                        DrawText("----------", GAME_WIDTH / 2 - MeasureText("------------", 20) / 2, GAME_HEIGHT / 2, 20, WHITE);
                 break;
             case PLAYING:
                 break;
@@ -54,9 +67,43 @@ int main(void){
             case GAMEOVER:
                 break;
         }
+        EndTextureMode();
+        //--------------------------------------pixel art drawing---------------------------
+        BeginDrawing();
+            ClearBackground(BLACK); 
+            
+			Rectangle sourceRect = { 
+				0.0f, 
+				0.0f, 
+				(float)target.texture.width, 
+				(float)-target.texture.height // FLIP!
+			};
+			Rectangle destRect = { 
+				0.0f, // top-left 
+				0.0f, // top-left 
+				(float)GAME_WIDTH * PIXEL_SCALE,  
+				(float)GAME_HEIGHT * PIXEL_SCALE  
+			};
+			DrawTexturePro(
+				target.texture, 
+				sourceRect, 
+				destRect, 
+				(Vector2){ 0.0f, 0.0f }, // draw from top-left
+				0.0f,                    // Rotation
+				WHITE                    // Tint
+			);
+            
         EndDrawing();
     }
-
+    
+    
+    
+    ////////////////////////////////////////CLEANUP///////////////////////////////////////
+    if (logoTexture.id != 0){
+		UnloadTexture(logoTexture);
+	}
+	UnloadRenderTexture(target);
+	UnloadFont(GetFontDefault());
     CloseWindow();
     return 0; 
 }
