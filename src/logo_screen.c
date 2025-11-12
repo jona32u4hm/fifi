@@ -6,10 +6,10 @@
 
 
 void UpdateLogoScreen(float *timer, float *alpha, GameState *currentState, Texture2D *logoTexture) {
-    // Define the state timings
-    #define FADE_IN_TIME 2.0f
-    #define FULL_VIEW_TIME 2.0f
-    #define FADE_OUT_TIME 2.0f
+    // Define state timings
+    #define logo_FADE_IN_TIME 2.0f
+    #define logo_FULL_VIEW_TIME 2.0f
+    #define logo_FADE_OUT_TIME 2.0f
 
     *timer += GetFrameTime();
     
@@ -19,13 +19,13 @@ void UpdateLogoScreen(float *timer, float *alpha, GameState *currentState, Textu
         return; 
     }
 	
-    if (*timer < FADE_IN_TIME) {
-        *alpha = *timer / FADE_IN_TIME;
-    } else if (*timer < FADE_IN_TIME + FULL_VIEW_TIME) {
+    if (*timer < logo_FADE_IN_TIME) {
+        *alpha = *timer / logo_FADE_IN_TIME;
+    } else if (*timer < logo_FADE_IN_TIME + logo_FULL_VIEW_TIME) {
         *alpha = 1.0f;
-    } else if (*timer < FADE_IN_TIME + FULL_VIEW_TIME + FADE_OUT_TIME) {
-        float fadeOutElapsed = *timer - (FADE_IN_TIME + FULL_VIEW_TIME);
-        *alpha = 1.0f - (fadeOutElapsed / FADE_OUT_TIME);
+    } else if (*timer < logo_FADE_IN_TIME + logo_FULL_VIEW_TIME + logo_FADE_OUT_TIME) {
+        float fadeOutElapsed = *timer - (logo_FADE_IN_TIME + logo_FULL_VIEW_TIME);
+        *alpha = 1.0f - (fadeOutElapsed / logo_FADE_OUT_TIME);
     } else {
         // Transition
         *currentState = SPLASH;
@@ -36,5 +36,5 @@ void UpdateLogoScreen(float *timer, float *alpha, GameState *currentState, Textu
         return;
     }
 
-    // Drawing logic would be in a separate DrawLogoScreen function
+    // Drawing logic outside
 }

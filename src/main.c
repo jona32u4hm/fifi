@@ -12,15 +12,17 @@
 
 #include "game_data.h"
 #include "logo_screen.h"
+#include "splash_screen.h"
 
 // --- PIXEL ART ENGINE CONFIGURATION ---
 #define GAME_WIDTH 160
-#define GAME_HEIGHT 90
+#define GAME_HEIGHT 144
 #define PIXEL_SCALE 5 // The fixed multiplier for rendering (e.g., 5X scale)
 // --------------------------------------
 
 // --- Textures --- 
 Texture2D logoTexture;
+Texture2D splashTexture;
 //----------------
 
 
@@ -36,9 +38,11 @@ int main(void){
     SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);    // para evitar que se vea borroso
     
     
-    GameState currentState = LOGO;
+    GameState currentState = LOGO; //game_data.h
+    SplashState splashState = FADEIN; //splash_screen.h
     float timer = 0.0; 
     float alpha = 0.0f; // Initialize alpha to fully transparent (0.0)
+    int alphaByte; // for fade in/out effect
     while (!WindowShouldClose()){
 
 	//dibujar sobre pantalla virtual:
@@ -49,7 +53,7 @@ int main(void){
                         UpdateLogoScreen(&timer, &alpha, &currentState, &logoTexture);
                         ClearBackground(BLACK);
                         // Create a color with the calculated alpha value (0 to 255)
-                        int alphaByte = (int)(alpha * 255.0f);
+                        alphaByte = (int)(alpha * 255.0f);
                         Color logoColor = { 255, 255, 255, alphaByte }; // White color with current alpha
 						DrawTexture(logoTexture, 
 								    (GAME_WIDTH/2) - (logoTexture.width/2), 
@@ -57,8 +61,15 @@ int main(void){
 								    logoColor);
                 break;
             case SPLASH:
+            			UpdateSplashScreen(&timer, &alpha, &currentState, &splashTexture, &splashState);
                         ClearBackground(BLACK);
-                        DrawText("----------", GAME_WIDTH / 2 - MeasureText("------------", 20) / 2, GAME_HEIGHT / 2, 20, WHITE);
+                        // Create a color with the calculated alpha value (0 to 255)
+                        alphaByte = (int)(alpha * 255.0f);
+                        Color splashColor = { 255, 255, 255, alphaByte }; // White color with current alpha
+						DrawTexture(splashTexture, 
+								    (GAME_WIDTH/2) - (splashTexture.width/2), 
+								    (GAME_HEIGHT/2) - (splashTexture.height/2), 
+								    splashColor);
                 break;
             case PLAYING:
                 break;
@@ -101,6 +112,9 @@ int main(void){
     ////////////////////////////////////////CLEANUP///////////////////////////////////////
     if (logoTexture.id != 0){
 		UnloadTexture(logoTexture);
+	}
+    if (splashTexture.id != 0){
+		UnloadTexture(splashTexture);
 	}
 	UnloadRenderTexture(target);
 	UnloadFont(GetFontDefault());
