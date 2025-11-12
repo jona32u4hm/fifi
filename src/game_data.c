@@ -1,25 +1,23 @@
 #include "level_data.h"
 
-// The array index is the Level ID 
-static LevelData levels[] = {
+static LevelData allLevels[] = {
+    // Level ID 1 (Index 0)
     {
-        .mapFilePath = "assets/maps/level1.json",
-        .mapWidth = 64,
-        .enemyCount = 2,
-        .enemies = {
-            {.spawnPos = {100, 100}, .typeID = 0},
-            {.spawnPos = {200, 100}, .typeID = 1}
-        },
-        .playerStart = {.startPos = {50, 50}}
-    },
-    
-    {
-        .mapFilePath = "assets/maps/level2.json",
-        .mapWidth = 128,
+        .mapWidth = 64, 
+        .mapHeight = 36, 
         .enemyCount = 5,
-        // ... define enemy setups for Level 2
+        // tileMapData and enemies are NULL/zero-initialized by default
+        .playerStart = {.startPos = {50, 50}, .startHealth = 100.0f}
+        // NOTE: This array doesn't define the map numbers or enemy types yet!
+    },
+    // Level ID 2 (Index 1)
+    {
+        .mapWidth = 128, 
+        .mapHeight = 72, 
+        .enemyCount = 10,
+        .playerStart = {.startPos = {100, 100}, .startHealth = 100.0f}
     }
-    // ... add more levels here
+    // ...
 };
 
 const int TOTAL_LEVELS = sizeof(allLevels) / sizeof(LevelData); // Calculate total number of levels
