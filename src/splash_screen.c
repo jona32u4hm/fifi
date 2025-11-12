@@ -33,7 +33,7 @@ void UpdateSplashScreen(float *timer, float *alpha, GameState *currentState, Tex
 				*alpha = (splash_FADE_IN_TIME - *timer) / splash_FADE_IN_TIME;
 			} else {
 				*splashState = FADEIN; //para la próxima
-				*currentState = PLAYING;
+				*currentState = LOADING;
 				*timer = 0.0f;
 		   		UnloadTexture(*splashTexture);
 				splashTexture->id = 0; // Important to reset ID

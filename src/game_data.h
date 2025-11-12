@@ -5,6 +5,7 @@
 typedef enum {
     LOGO,
     SPLASH,
+    LOADING,
     PLAYING,
     PAUSED, 
     GAMEOVER

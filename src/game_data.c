@@ -4,19 +4,21 @@ static LevelData allLevels[] = {
     // Level ID 1 (Index 0)
     {
         .mapWidth = 64, 
-        .mapHeight = 36, 
+        .tileMapData = NULL,
         .enemyCount = 5,
-        // tileMapData and enemies are NULL/zero-initialized by default
+        .enemies = NULL,
         .playerStart = {.startPos = {50, 50}, .startHealth = 100.0f}
-        // NOTE: This array doesn't define the map numbers or enemy types yet!
+        
     },
     // Level ID 2 (Index 1)
     {
-        .mapWidth = 128, 
-        .mapHeight = 72, 
-        .enemyCount = 10,
-        .playerStart = {.startPos = {100, 100}, .startHealth = 100.0f}
-    }
+        .mapWidth = 64, 
+        .tileMapData = NULL,
+        .enemyCount = 5,
+        .enemies = NULL,
+        .playerStart = {.startPos = {50, 50}, .startHealth = 100.0f}
+        
+    },
     // ...
 };
 

@@ -24,7 +24,8 @@
 Texture2D logoTexture;
 Texture2D splashTexture;
 //----------------
-
+int currentLevelID = 1;
+LevelData currentLevel;
 
 
 int main(void){
@@ -71,7 +72,15 @@ int main(void){
 								    (GAME_HEIGHT/2) - (splashTexture.height/2), 
 								    splashColor);
                 break;
+            case LOADING:
+            		//copy next level's structure to currentLevel
+            		
+            		
+                break;
             case PLAYING:
+            		//draw map based on levelMap
+            		
+            		
                 break;
             case PAUSED:
                 break;
