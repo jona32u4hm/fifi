@@ -2,7 +2,7 @@
 #include <entities.h>
 
 //move_player changes player position, direction and current texture
-void move_player(entity* player, Camera2D* camera) {
+void move_player(Entity* player, Camera2D* camera) {
     if (IsKeyDown(KEY_W)){
         player->dest_rect.y += -100 * GetFrameTime();
         player->current_texture = player->textures.texture_up;
@@ -28,7 +28,7 @@ void move_player(entity* player, Camera2D* camera) {
     }
 }
 //move_player changes alien position, direction and current texture
-void move_alien(entity* alien) {
+void move_alien(Entity* alien) {
     if (IsKeyDown(KEY_UP)){
         alien->dest_rect.y += -100 * GetFrameTime();
         alien->current_texture = alien->textures.texture_up;
@@ -71,12 +71,12 @@ int main(void) {
     Texture2D alien_down = LoadTexture("assets/pixelart/alien_down.png");
 
     //Initializing player 
-    textures player_textures = (textures) {
+    Textures player_textures = (Textures) {
     .texture_up = player_up,
     .texture_down = player_down,
     .texture_side = player_side,
     };
-    entity player = (entity) {
+    Entity player = (Entity) {
         .direction = 1,
         .textures = player_textures,
         .current_texture = player.textures.texture_down,
@@ -90,12 +90,12 @@ int main(void) {
     };
 
     //Initializing alien
-    textures alien_textures = (textures) {
+    Textures alien_textures = (Textures) {
     .texture_up = alien_up,
     .texture_down = alien_down,
     .texture_side = alien_side,
     };
-    entity alien  = (entity) {
+    Entity alien  = (Entity) {
         .direction = 1,
         .textures = alien_textures,
         .current_texture = alien.textures.texture_down,
