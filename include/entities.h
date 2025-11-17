@@ -2,20 +2,20 @@
 #define ENTITIES_H
 
 #include <raylib.h> //The textures struct will be included inside the entity struct 
-typedef struct Textures { 
+typedef struct textures { 
     Texture2D texture_up; 
     Texture2D texture_down; 
     Texture2D texture_side; 
-} Textures; 
+} textures; 
 
 //entity contains all entity info 
-typedef struct Entity { 
+typedef struct entity { 
     float direction; 
     struct textures textures; 
     Texture2D current_texture; //Says what texture will be drawn 
     Rectangle dest_rect; 
     float hp; 
-} Entity; 
+} entity; 
 
 #endif
 
