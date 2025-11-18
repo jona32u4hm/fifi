@@ -25,7 +25,7 @@ Texture2D logoTexture;
 Texture2D splashTexture;
 //----------------
 int currentLevelID = 1;
-LevelData currentLevel;
+LevelData *currentLevel;
 
 
 int main(void){
@@ -74,8 +74,16 @@ int main(void){
                 break;
             case LOADING:
             		//copy next level's structure to currentLevel
-            		
-            		
+            		char *filename = GetLevelPath(currentLevelID);
+    				currentLevel = LoadLevelData(filename);
+				    if (currentLevel != NULL) {
+						printf("Level loaded successfully!\n");
+						PrintLevelData(currentLevel);
+						currentState = PLAYING;
+					} else {
+						printf("Failed to load level data.\n");
+						currentState = SPLASH;
+					}
                 break;
             case PLAYING:
             		//draw map based on levelMap
@@ -119,6 +127,12 @@ int main(void){
     
     
     ////////////////////////////////////////CLEANUP///////////////////////////////////////
+	if (currentLevel != NULL) {
+		FreeLevelData(currentLevel);
+		printf("level freed...\n");
+	} else printf("NULL level pointer???\n");
+    
+    
     if (logoTexture.id != 0){
 		UnloadTexture(logoTexture);
 	}
