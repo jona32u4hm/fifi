@@ -11,24 +11,29 @@ void move_player(Entity* player, Camera2D* camera) {
         player->dest_rect.y += -10 * GetFrameTime();
         player->current_texture = player->textures.texture_up;
 	camera->target.y += -10 * GetFrameTime();
+	player->vertical_direction = 1;
+	player->current_direction = UP;
     }
     if (IsKeyDown(KEY_A)){
         player->dest_rect.x += -10* GetFrameTime();
         player->current_texture = player->textures.texture_side;
-        player->direction = 1;
 	camera->target.x += -10 * GetFrameTime();
-
+	player->horizontal_direction = 1;
+	player->current_direction = LEFT;
     }
     if (IsKeyDown(KEY_S)){
         player->dest_rect.y += 10 * GetFrameTime();
         player->current_texture = player->textures.texture_down;
 	camera->target.y += 10 * GetFrameTime();
+	player->vertical_direction = -1;
+	player->current_direction = DOWN;
     }
     if (IsKeyDown(KEY_D)){
         player->dest_rect.x += 10 * GetFrameTime();
         player->current_texture = player->textures.texture_side;
-        player->direction = -1;
 	camera->target.x += 10 * GetFrameTime();
+	player->horizontal_direction = -1;
+	player->current_direction = RIGHT;
     }
 }
 //move_player changes alien position, direction and current texture
@@ -36,20 +41,22 @@ void move_alien(Entity* alien) {
     if (IsKeyDown(KEY_UP)){
         alien->dest_rect.y += -10 *  GetFrameTime();
         alien->current_texture = alien->textures.texture_up;
+	alien->vertical_direction = 1;
     }
     if (IsKeyDown(KEY_LEFT)){
         alien->dest_rect.x += -10 * GetFrameTime();
         alien->current_texture = alien->textures.texture_side;
-        alien->direction = 1;
+        alien->horizontal_direction = 1;
     }
     if (IsKeyDown(KEY_DOWN)){
         alien->dest_rect.y += 10 * GetFrameTime();
         alien->current_texture = alien->textures.texture_down;
+	alien->vertical_direction = -1;
     }
     if (IsKeyDown(KEY_RIGHT)){
         alien->dest_rect.x += 10 * GetFrameTime();
         alien->current_texture = alien->textures.texture_side;
-        alien->direction = -1;
+        alien->horizontal_direction = -1;
     }
 }
 
@@ -57,7 +64,7 @@ void move_alien(Entity* alien) {
 //Initializing main
 int main(void) {
 
-	const int screenWidth = GAME_WIDTH * PIXEL_SCALE;
+    const int screenWidth = GAME_WIDTH * PIXEL_SCALE;
     const int screenHeight = GAME_HEIGHT * PIXEL_SCALE;
    
     InitWindow(screenWidth, screenHeight, "FINDING FIFI");
@@ -89,7 +96,8 @@ int main(void) {
     .texture_side = player_side,
     };
     Entity player = (Entity) {
-        .direction = 1,
+        .vertical_direction = 1,
+	.horizontal_direction = 1,
         .textures = player_textures,
         .current_texture = player.textures.texture_down,
         .hp = 100,
@@ -108,7 +116,8 @@ int main(void) {
     .texture_side = alien_side,
     };
     Entity alien  = (Entity) {
-        .direction = 1,
+        .vertical_direction = 1,
+	.horizontal_direction = 1,
         .textures = alien_textures,
         .current_texture = alien.textures.texture_down,
         .hp = 100,
@@ -128,12 +137,12 @@ int main(void) {
 	    BeginMode2D(camera);
             if (player.hp > 0) {
                 move_player(&player, &camera);
-                DrawTexturePro(player.current_texture, (Rectangle){0, 0, player.direction * 16, 16}, player.dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
+                DrawTexturePro(player.current_texture, (Rectangle){0, 0, player.horizontal_direction * 16, 16}, player.dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
 }
 
             if (alien.hp > 0) {
                 move_alien(&alien);
-                DrawTexturePro(alien.current_texture, (Rectangle){0, 0, alien.direction * 16, 16}, alien.dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
+                DrawTexturePro(alien.current_texture, (Rectangle){0, 0, alien.horizontal_direction * 16, 16}, alien.dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
 }
 	    EndMode2D();
         EndTextureMode();
