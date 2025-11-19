@@ -4,46 +4,46 @@
 //move_player changes player position, direction and current texture
 void move_player(Entity* player, Camera2D* camera) {
     if (IsKeyDown(KEY_W)){
-        player->dest_rect.y += -100 * GetFrameTime();
+        player->dest_rect.y += -10 * GetFrameTime();
         player->current_texture = player->textures.texture_up;
-	camera->target.y += -100 * GetFrameTime();
+	camera->target.y += -10 * GetFrameTime();
     }
     if (IsKeyDown(KEY_A)){
-        player->dest_rect.x += -100 * GetFrameTime();
+        player->dest_rect.x += -10* GetFrameTime();
         player->current_texture = player->textures.texture_side;
         player->direction = 1;
-	camera->target.x += -100 * GetFrameTime();
+	camera->target.x += -10 * GetFrameTime();
 
     }
     if (IsKeyDown(KEY_S)){
-        player->dest_rect.y += 100 * GetFrameTime();
+        player->dest_rect.y += 10 * GetFrameTime();
         player->current_texture = player->textures.texture_down;
-	camera->target.y += 100 * GetFrameTime();
+	camera->target.y += 10 * GetFrameTime();
     }
     if (IsKeyDown(KEY_D)){
-        player->dest_rect.x += 100 * GetFrameTime();
+        player->dest_rect.x += 10 * GetFrameTime();
         player->current_texture = player->textures.texture_side;
         player->direction = -1;
-	camera->target.x += 100 * GetFrameTime();
+	camera->target.x += 10 * GetFrameTime();
     }
 }
 //move_player changes alien position, direction and current texture
 void move_alien(Entity* alien) {
     if (IsKeyDown(KEY_UP)){
-        alien->dest_rect.y += -100 * GetFrameTime();
+        alien->dest_rect.y += -10 *  GetFrameTime();
         alien->current_texture = alien->textures.texture_up;
     }
     if (IsKeyDown(KEY_LEFT)){
-        alien->dest_rect.x += -100 * GetFrameTime();
+        alien->dest_rect.x += -10 * GetFrameTime();
         alien->current_texture = alien->textures.texture_side;
         alien->direction = 1;
     }
     if (IsKeyDown(KEY_DOWN)){
-        alien->dest_rect.y += 100 * GetFrameTime();
+        alien->dest_rect.y += 10 * GetFrameTime();
         alien->current_texture = alien->textures.texture_down;
     }
     if (IsKeyDown(KEY_RIGHT)){
-        alien->dest_rect.x += 100 * GetFrameTime();
+        alien->dest_rect.x += 10 * GetFrameTime();
         alien->current_texture = alien->textures.texture_side;
         alien->direction = -1;
     }
@@ -84,8 +84,8 @@ int main(void) {
         .dest_rect = (Rectangle){
         .x = 100,
         .y = 200,
-        .width = 80,
-        .height = 80,
+        .width = 16,
+        .height = 16,
         }
     };
 
@@ -103,8 +103,8 @@ int main(void) {
         .dest_rect = (Rectangle){
         .x = 400,
         .y = 200,
-        .width = 80,
-        .height = 80,
+        .width = 16,
+        .height = 16,
         }
     };
 
