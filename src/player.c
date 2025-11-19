@@ -123,7 +123,7 @@ int main(void) {
 
     //Opening window
     while(!WindowShouldClose()) {
-        BeginTextureMode(target);
+        BeginTextureMode(target); // se empieza a dibujar sobre la pantalla virtual "target"
             ClearBackground(RAYWHITE);
 	    BeginMode2D(camera);
             if (player.hp > 0) {
@@ -138,7 +138,7 @@ int main(void) {
 	    EndMode2D();
         EndTextureMode();
         
-        BeginDrawing();
+        BeginDrawing(); //en el drawing se dibuja la pantalla virtual
             ClearBackground(BLACK); 
             
 			Rectangle sourceRect = { 
