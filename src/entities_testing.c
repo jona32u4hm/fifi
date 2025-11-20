@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include <raylib.h>
 #include "entities.h"
 #include "player.h"
@@ -30,17 +31,26 @@ int main(void) {
     
     entity_array proj_array = init_ent_array(PROJECTILE_CAP);
 
+    float cooldown = 5.0f;
+
     //Opening window
     while(!WindowShouldClose()) {
-        BeginTextureMode(target); // se empieza a dibujar sobre la pantalla virtual "target"
+
+        BeginTextureMode(target); // Begins drawing on virtual screen "target"
         ClearBackground(RAYWHITE);
 	    BeginMode2D(camera);
+
+            if (cooldown < 5.0f) {
+                cooldown += GetFrameTime();
+            }
+
             if (player.hp > 0) {
                 move_player(&player, &camera);
                 DrawTexturePro(player.current_texture, (Rectangle){0, 0, player.horizontal_direction * 16, 16}, player.dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
 }
-            if (IsKeyDown(KEY_E)) {
+            if (IsKeyDown(KEY_E) && cooldown >= 5.0f) {
                 add_projectile(&proj_array, &player);
+                cooldown = 0.0f;
             }
             for (int i = 0; i < proj_array.size; i++) {
                 DrawTexturePro((*(proj_array.data + i)).current_texture, (Rectangle){0, 0, (*(proj_array.data + i)).horizontal_direction * 16, 16}, (*(proj_array.data + i)).dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);

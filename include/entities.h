@@ -6,7 +6,8 @@
 #define DOWN 3
 #define RIGHT 4
 
-#define PROJECTILE_CAP  5
+#define PROJECTILE_CAP  99
+#define MIN_TIME = 5
 
 #include <raylib.h> //The textures struct will be included inside the entity struct 
 typedef struct Textures { 

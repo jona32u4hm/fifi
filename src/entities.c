@@ -21,7 +21,7 @@ void add_projectile(entity_array* arr, Entity* player) {
         .vertical_direction = player->vertical_direction,
         .horizontal_direction = player->horizontal_direction,
         .current_direction = player->current_direction,
-        .textures = player->textures,    // OK, copiás todas las texturas
+        .textures = player->textures,    
         .current_texture = LoadTexture("assets/pixelart/projectile.png"),
         .hp = 1,
         .dest_rect = (Rectangle){
@@ -30,7 +30,7 @@ void add_projectile(entity_array* arr, Entity* player) {
             .width = 8,
             .height = 8,
         },
-    }; // <-- ESTE PUNTO Y COMA ES OBLIGATORIO
+    }; 
 
     arr->data[arr->size] = projectile;
     arr->size++;
