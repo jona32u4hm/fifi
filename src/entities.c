@@ -23,7 +23,7 @@ void add_projectile(entity_array* arr, Entity* player) {
         .current_direction = player->current_direction,
         .textures = player->textures,    // OK, copiás todas las texturas
         .current_texture = LoadTexture("assets/pixelart/projectile.png"),
-        .hp = 9999,
+        .hp = 1,
         .dest_rect = (Rectangle){
             .x = player->dest_rect.x + 4,
             .y = player->dest_rect.y + 4,
@@ -34,5 +34,30 @@ void add_projectile(entity_array* arr, Entity* player) {
 
     arr->data[arr->size] = projectile;
     arr->size++;
+}
+
+void move_projectile(Entity* proj) {
+    switch (proj->current_direction) {
+    case UP:
+        proj->dest_rect.y += -10 * GetFrameTime();
+        break;
+
+    case LEFT:
+        proj->dest_rect.x += -10 * GetFrameTime();
+        break;
+
+    case DOWN:
+        proj->dest_rect.y += 10 * GetFrameTime();
+        break;
+
+    case RIGHT:
+        proj->dest_rect.x += 10 * GetFrameTime();
+        break;
+    default:
+        printf("Error: projectile current direction value not valid\n");
+        proj->dest_rect.y += -10 * GetFrameTime();
+        break;
+    }
+
 }
 

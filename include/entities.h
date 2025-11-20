@@ -35,5 +35,7 @@ typedef struct entity_array {
 entity_array init_ent_array(int capacity);
 void add_projectile(entity_array* arr, Entity* player);
 
+void move_projectile(Entity* proj);
+
 #endif
 

@@ -44,6 +44,7 @@ int main(void) {
             }
             for (int i = 0; i < proj_array.size; i++) {
                 DrawTexturePro((*(proj_array.data + i)).current_texture, (Rectangle){0, 0, (*(proj_array.data + i)).horizontal_direction * 16, 16}, (*(proj_array.data + i)).dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
+                move_projectile(proj_array.data + i);
             }
 
             if (alien.hp > 0) {
