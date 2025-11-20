@@ -1,5 +1,8 @@
 #ifndef GAME_DATA_H
 #define GAME_DATA_H
+
+
+
 typedef unsigned char byte;
 // The GameState enum definition
 typedef enum {

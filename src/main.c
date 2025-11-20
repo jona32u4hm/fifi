@@ -13,6 +13,7 @@
 #include "game_data.h"
 #include "logo_screen.h"
 #include "splash_screen.h"
+#include "map_render.h"
 
 // --- PIXEL ART ENGINE CONFIGURATION ---
 #define GAME_WIDTH 160
@@ -23,12 +24,15 @@
 // --- Textures --- 
 Texture2D logoTexture;
 Texture2D splashTexture;
+Texture2D floorTile;
+Texture2D wallTile;
 //----------------
 int currentLevelID = 1;
 LevelData *currentLevel;
 
 
 int main(void){
+	
 	const int screenWidth = GAME_WIDTH * PIXEL_SCALE;
     const int screenHeight = GAME_HEIGHT * PIXEL_SCALE;
    
@@ -84,9 +88,18 @@ int main(void){
 						printf("Failed to load level data.\n");
 						currentState = SPLASH;
 					}
+					
+				    if (floorTile.id == 0){//load si no lo ha hecho
+						floorTile = LoadTexture("assets/pixelart/floor.png");
+						SetTextureFilter(floorTile, TEXTURE_FILTER_POINT);
+					}
+					if (wallTile.id == 0){//load si no lo ha hecho
+						wallTile = LoadTexture("assets/pixelart/wall1.png");
+						SetTextureFilter(wallTile, TEXTURE_FILTER_POINT);
+					}
                 break;
             case PLAYING:
-            		//draw map based on levelMap
+            		renderMap(currentLevel, floorTile, wallTile);
             		
             		
                 break;
@@ -132,7 +145,12 @@ int main(void){
 		printf("level freed...\n");
 	} else printf("NULL level pointer???\n");
     
-    
+    if (floorTile.id != 0){
+		UnloadTexture(logoTexture);
+	}
+    if (wallTile.id != 0){
+		UnloadTexture(splashTexture);
+	} 
     if (logoTexture.id != 0){
 		UnloadTexture(logoTexture);
 	}
