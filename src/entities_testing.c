@@ -27,22 +27,32 @@ int main(void) {
     
     Entity player = initialize_player();
     Entity alien = CreateAlien();
-
+    
+    entity_array proj_array = init_ent_array(PROJECTILE_CAP);
 
     //Opening window
     while(!WindowShouldClose()) {
         BeginTextureMode(target); // se empieza a dibujar sobre la pantalla virtual "target"
-            ClearBackground(RAYWHITE);
+        ClearBackground(RAYWHITE);
 	    BeginMode2D(camera);
             if (player.hp > 0) {
                 move_player(&player, &camera);
                 DrawTexturePro(player.current_texture, (Rectangle){0, 0, player.horizontal_direction * 16, 16}, player.dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
 }
+            if (IsKeyDown(KEY_E)) {
+                add_projectile(&proj_array, &player);
+            }
+            for (int i = 0; i < proj_array.size; i++) {
+                DrawTexturePro((*(proj_array.data + i)).current_texture, (Rectangle){0, 0, (*(proj_array.data + i)).horizontal_direction * 16, 16}, (*(proj_array.data + i)).dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
+            }
 
             if (alien.hp > 0) {
                 move_alien(&alien);
                 DrawTexturePro(alien.current_texture, (Rectangle){0, 0, alien.horizontal_direction * 16, 16}, alien.dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
 }
+
+        
+
 	    EndMode2D();
         EndTextureMode();
         

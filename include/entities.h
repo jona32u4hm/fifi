@@ -6,6 +6,8 @@
 #define DOWN 3
 #define RIGHT 4
 
+#define PROJECTILE_CAP  5
+
 #include <raylib.h> //The textures struct will be included inside the entity struct 
 typedef struct Textures { 
     Texture2D texture_up; 
@@ -23,6 +25,15 @@ typedef struct Entity {
     Rectangle dest_rect; 
     float hp; 
 } Entity; 
+
+typedef struct entity_array {
+    Entity* data;
+    int size;
+    int cap;
+} entity_array;
+
+entity_array init_ent_array(int capacity);
+void add_projectile(entity_array* arr, Entity* player);
 
 #endif
 
