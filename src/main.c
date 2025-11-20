@@ -6,50 +6,141 @@
 */
 
 #include "raylib.h"
+#include <stdio.h>
 
 
 
+#include "game_data.h"
+#include "logo_screen.h"
+#include "splash_screen.h"
 
-typedef enum {
-    LOGO,
-    SPLASH,
-    PLAYING,
-    PAUSED, 
-    GAMEOVER
-} GameState;
+// --- PIXEL ART ENGINE CONFIGURATION ---
+#define GAME_WIDTH 160
+#define GAME_HEIGHT 144
+#define PIXEL_SCALE 5 // The fixed multiplier for rendering (e.g., 5X scale)
+// --------------------------------------
 
-
-
-
+// --- Textures --- 
+Texture2D logoTexture;
+Texture2D splashTexture;
+//----------------
+int currentLevelID = 1;
+LevelData *currentLevel;
 
 
 int main(void){
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+	const int screenWidth = GAME_WIDTH * PIXEL_SCALE;
+    const int screenHeight = GAME_HEIGHT * PIXEL_SCALE;
    
     InitWindow(screenWidth, screenHeight, "FINDING FIFI");
     SetTargetFPS(30);
+	
+	RenderTexture2D target = LoadRenderTexture(GAME_WIDTH, GAME_HEIGHT);	//la pantalla virtual de baja resolución
+    SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);    // para evitar que se vea borroso
     
-    GameState currentState = LOGO;
-
+    
+    GameState currentState = LOGO; //game_data.h
+    SplashState splashState = FADEIN; //splash_screen.h
+    float timer = 0.0; 
+    float alpha = 0.0f; // Initialize alpha to fully transparent (0.0)
+    int alphaByte; // for fade in/out effect
     while (!WindowShouldClose()){
-        BeginDrawing();
+
+	//dibujar sobre pantalla virtual:
+        BeginTextureMode(target);
         switch (currentState){
-            //Código principal del juego
+            //main game code
             case LOGO:
+                        UpdateLogoScreen(&timer, &alpha, &currentState, &logoTexture);
+                        ClearBackground(BLACK);
+                        // Create a color with the calculated alpha value (0 to 255)
+                        alphaByte = (int)(alpha * 255.0f);
+                        Color logoColor = { 255, 255, 255, alphaByte }; // White color with current alpha
+						DrawTexture(logoTexture, 
+								    (GAME_WIDTH/2) - (logoTexture.width/2), 
+								    (GAME_HEIGHT/2) - (logoTexture.height/2), 
+								    logoColor);
                 break;
             case SPLASH:
+            			UpdateSplashScreen(&timer, &alpha, &currentState, &splashTexture, &splashState);
+                        ClearBackground(BLACK);
+                        // Create a color with the calculated alpha value (0 to 255)
+                        alphaByte = (int)(alpha * 255.0f);
+                        Color splashColor = { 255, 255, 255, alphaByte }; // White color with current alpha
+						DrawTexture(splashTexture, 
+								    (GAME_WIDTH/2) - (splashTexture.width/2), 
+								    (GAME_HEIGHT/2) - (splashTexture.height/2), 
+								    splashColor);
+                break;
+            case LOADING:
+            		//copy next level's structure to currentLevel
+            		char *filename = GetLevelPath(currentLevelID);
+    				currentLevel = LoadLevelData(filename);
+				    if (currentLevel != NULL) {
+						printf("Level loaded successfully!\n");
+						PrintLevelData(currentLevel);
+						currentState = PLAYING;
+					} else {
+						printf("Failed to load level data.\n");
+						currentState = SPLASH;
+					}
                 break;
             case PLAYING:
+            		//draw map based on levelMap
+            		
+            		
                 break;
             case PAUSED:
                 break;
             case GAMEOVER:
                 break;
         }
+        EndTextureMode();
+        //--------------------------------------pixel art drawing---------------------------
+        BeginDrawing();
+            ClearBackground(BLACK); 
+            
+			Rectangle sourceRect = { 
+				0.0f, 
+				0.0f, 
+				(float)target.texture.width, 
+				(float)-target.texture.height // FLIP!
+			};
+			Rectangle destRect = { 
+				0.0f, // top-left 
+				0.0f, // top-left 
+				(float)GAME_WIDTH * PIXEL_SCALE,  
+				(float)GAME_HEIGHT * PIXEL_SCALE  
+			};
+			DrawTexturePro(
+				target.texture, 
+				sourceRect, 
+				destRect, 
+				(Vector2){ 0.0f, 0.0f }, // draw from top-left
+				0.0f,                    // Rotation
+				WHITE                    // Tint
+			);
+            
         EndDrawing();
     }
-
+    
+    
+    
+    ////////////////////////////////////////CLEANUP///////////////////////////////////////
+	if (currentLevel != NULL) {
+		FreeLevelData(currentLevel);
+		printf("level freed...\n");
+	} else printf("NULL level pointer???\n");
+    
+    
+    if (logoTexture.id != 0){
+		UnloadTexture(logoTexture);
+	}
+    if (splashTexture.id != 0){
+		UnloadTexture(splashTexture);
+	}
+	UnloadRenderTexture(target);
+	UnloadFont(GetFontDefault());
     CloseWindow();
     return 0; 
 }
