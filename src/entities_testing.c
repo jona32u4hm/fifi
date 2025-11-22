@@ -1,5 +1,6 @@
-#include "stdio.h"
+#include <stdio.h>
 #include <raylib.h>
+#include <stdlib.h>
 #include "entities.h"
 #include "player.h"
 // --- PIXEL ART ENGINE CONFIGURATION ---
@@ -53,7 +54,7 @@ int main(void) {
                 cooldown = 0.0f;
             }
             for (int i = 0; i < proj_array.size; i++) {
-                DrawTexturePro((*(proj_array.data + i)).current_texture, (Rectangle){0, 0, (*(proj_array.data + i)).horizontal_direction * 16, 16}, (*(proj_array.data + i)).dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
+                DrawTexturePro((*(proj_array.data + i)).current_texture, (Rectangle){0, 0, (*(proj_array.data + i)).horizontal_direction * 8, 8}, (*(proj_array.data + i)).dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
                 move_projectile(proj_array.data + i);
             }
 
@@ -103,6 +104,9 @@ int main(void) {
     UnloadTexture(alien.textures.texture_up);
     UnloadTexture(alien.textures.texture_down);
     UnloadTexture(alien.textures.texture_side);
-
+    for (int i = 0; i < proj_array.size; i++) {
+        UnloadTexture((*(proj_array.data + i)).current_texture);
+    }
+    free(proj_array.data);
     return 0;
 }
