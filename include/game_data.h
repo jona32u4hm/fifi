@@ -1,7 +1,7 @@
 #ifndef GAME_DATA_H
 #define GAME_DATA_H
 
-
+#include "entities.h"
 
 typedef unsigned char byte;
 // The GameState enum definition
@@ -15,14 +15,9 @@ typedef enum {
 } GameState;
 
 typedef struct {
-    int x, y;
-    int type;
-} Entity; // Entity placeholder
-
-typedef struct {
 	Entity *enemies; // array of enemies
 	int enemyCount;
-}Batch;
+}Batch;                               //entites.h already has an entity_array struct
 
 typedef struct {
 	
