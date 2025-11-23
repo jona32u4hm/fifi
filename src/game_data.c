@@ -2,14 +2,7 @@
 #include <stdio.h>   
 #include <stdlib.h>
 #include <string.h>
-
-
-
-
-
-
-
-
+#include "entities.h"
 
 
 
@@ -110,16 +103,20 @@ if (fgets(line, sizeof(line), file) == NULL) { goto error_cleanup; }
             Entity *currentEnemy = &currentBatch->enemies[j];
 if (fgets(line, sizeof(line), file) == NULL) { goto error_cleanup; }
             // Read enemy x, y
-            if (fscanf(file, "%d %d", &currentEnemy->x, &currentEnemy->y) != 2) {
+            if (fscanf(file, "%f %f", &currentEnemy->dest_rect.x, &currentEnemy->dest_rect.y) != 2) {
                 fprintf(stderr, "Error reading position for enemy %d in batch %d.\n", j, i);
                 goto error_cleanup;
             }
+
+
 if (fgets(line, sizeof(line), file) == NULL) { goto error_cleanup; }
             // Read enemy type
+            /*
             if (fscanf(file, "%d", &currentEnemy->type) != 1) {
                 fprintf(stderr, "Error reading type for enemy %d in batch %d.\n", j, i);
                 goto error_cleanup;
             }
+            */                            /////////////////////////////////////////////////////////////////////////////////Note: Fix entiities to add type
         }
     }
 
@@ -188,11 +185,12 @@ void PrintLevelData(const LevelData* levelData) {
         const Batch *batch = &levelData->batch[i];
         printf("  - Batch %d:\n", i);
         printf("    Enemy Count: %d\n", batch->enemyCount);
-        
+        /*
         for (int j = 0; j < batch->enemyCount; j++) {
             const Entity *enemy = &batch->enemies[j];
             printf("      Enemy %d: Pos=(%d, %d), Type=%d\n", j, enemy->x, enemy->y, enemy->type);
         }
+        */          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }
 
