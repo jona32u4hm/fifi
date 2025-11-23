@@ -19,7 +19,7 @@ int CheckMapCollision(LevelData *level, float px, float py) {
     return (tile == 1);
 }
 
-/
+
 int CheckPlayerCollision(LevelData *level, float playerX, float playerY,
                          float playerHalfWidth, float playerHalfHeight)
 {
