@@ -15,6 +15,8 @@
 #include "splash_screen.h"
 #include "map_render.h"
 
+#include "colision_wall.h"   // ← necesario para usar CheckPlayerCollision
+
 // --- PIXEL ART ENGINE CONFIGURATION ---
 #define GAME_WIDTH 160
 #define GAME_HEIGHT 144
@@ -32,14 +34,14 @@ LevelData *currentLevel;
 
 
 int main(void){
-	
-	const int screenWidth = GAME_WIDTH * PIXEL_SCALE;
+    
+    const int screenWidth = GAME_WIDTH * PIXEL_SCALE;
     const int screenHeight = GAME_HEIGHT * PIXEL_SCALE;
    
     InitWindow(screenWidth, screenHeight, "FINDING FIFI");
     SetTargetFPS(30);
-	
-	RenderTexture2D target = LoadRenderTexture(GAME_WIDTH, GAME_HEIGHT);	//la pantalla virtual de baja resolución
+    
+    RenderTexture2D target = LoadRenderTexture(GAME_WIDTH, GAME_HEIGHT);    //la pantalla virtual de baja resolución
     SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);    // para evitar que se vea borroso
     
     
@@ -50,58 +52,62 @@ int main(void){
     int alphaByte; // for fade in/out effect
     while (!WindowShouldClose()){
 
-	//dibujar sobre pantalla virtual:
+    //dibujar sobre pantalla virtual:
         BeginTextureMode(target);
         switch (currentState){
             //main game code
             case LOGO:
                         UpdateLogoScreen(&timer, &alpha, &currentState, &logoTexture);
                         ClearBackground(BLACK);
-                        // Create a color with the calculated alpha value (0 to 255)
                         alphaByte = (int)(alpha * 255.0f);
-                        Color logoColor = { 255, 255, 255, alphaByte }; // White color with current alpha
-						DrawTexture(logoTexture, 
-								    (GAME_WIDTH/2) - (logoTexture.width/2), 
-								    (GAME_HEIGHT/2) - (logoTexture.height/2), 
-								    logoColor);
+                        Color logoColor = { 255, 255, 255, alphaByte };
+                        DrawTexture(logoTexture, 
+                                    (GAME_WIDTH/2) - (logoTexture.width/2), 
+                                    (GAME_HEIGHT/2) - (logoTexture.height/2), 
+                                    logoColor);
                 break;
             case SPLASH:
-            			UpdateSplashScreen(&timer, &alpha, &currentState, &splashTexture, &splashState);
+                        UpdateSplashScreen(&timer, &alpha, &currentState, &splashTexture, &splashState);
                         ClearBackground(BLACK);
-                        // Create a color with the calculated alpha value (0 to 255)
                         alphaByte = (int)(alpha * 255.0f);
-                        Color splashColor = { 255, 255, 255, alphaByte }; // White color with current alpha
-						DrawTexture(splashTexture, 
-								    (GAME_WIDTH/2) - (splashTexture.width/2), 
-								    (GAME_HEIGHT/2) - (splashTexture.height/2), 
-								    splashColor);
+                        Color splashColor = { 255, 255, 255, alphaByte };
+                        DrawTexture(splashTexture, 
+                                    (GAME_WIDTH/2) - (splashTexture.width/2), 
+                                    (GAME_HEIGHT/2) - (splashTexture.height/2), 
+                                    splashColor);
                 break;
             case LOADING:
-            		//copy next level's structure to currentLevel
-            		char *filename = GetLevelPath(currentLevelID);
-    				currentLevel = LoadLevelData(filename);
-				    if (currentLevel != NULL) {
-						printf("Level loaded successfully!\n");
-						PrintLevelData(currentLevel);
-						currentState = PLAYING;
-					} else {
-						printf("Failed to load level data.\n");
-						currentState = SPLASH;
-					}
-					
-				    if (floorTile.id == 0){//load si no lo ha hecho
-						floorTile = LoadTexture("assets/pixelart/floor.png");
-						SetTextureFilter(floorTile, TEXTURE_FILTER_POINT);
-					}
-					if (wallTile.id == 0){//load si no lo ha hecho
-						wallTile = LoadTexture("assets/pixelart/wall1.png");
-						SetTextureFilter(wallTile, TEXTURE_FILTER_POINT);
-					}
+                    char *filename = GetLevelPath(currentLevelID);
+                    currentLevel = LoadLevelData(filename);
+                    if (currentLevel != NULL) {
+                        printf("Level loaded successfully!\n");
+                        PrintLevelData(currentLevel);
+                        currentState = PLAYING;
+                    } else {
+                        printf("Failed to load level data.\n");
+                        currentState = SPLASH;
+                    }
+                    
+                    if (floorTile.id == 0){
+                        floorTile = LoadTexture("assets/pixelart/floor.png");
+                        SetTextureFilter(floorTile, TEXTURE_FILTER_POINT);
+                    }
+                    if (wallTile.id == 0){
+                        wallTile = LoadTexture("assets/pixelart/wall1.png");
+                        SetTextureFilter(wallTile, TEXTURE_FILTER_POINT);
+                    }
                 break;
             case PLAYING:
-            		renderMap(currentLevel, floorTile, wallTile);
-            		
-            		
+                    renderMap(currentLevel, floorTile, wallTile);
+
+                    
+                    float px = 50, py = 50;
+                    float halfW = 8, halfH = 8;
+
+                    int col = CheckPlayerCollision(currentLevel, px, py, halfW, halfH);
+                    printf("COLISION = %d\n", col);
+                
+
                 break;
             case PAUSED:
                 break;
@@ -113,26 +119,26 @@ int main(void){
         BeginDrawing();
             ClearBackground(BLACK); 
             
-			Rectangle sourceRect = { 
-				0.0f, 
-				0.0f, 
-				(float)target.texture.width, 
-				(float)-target.texture.height // FLIP!
-			};
-			Rectangle destRect = { 
-				0.0f, // top-left 
-				0.0f, // top-left 
-				(float)GAME_WIDTH * PIXEL_SCALE,  
-				(float)GAME_HEIGHT * PIXEL_SCALE  
-			};
-			DrawTexturePro(
-				target.texture, 
-				sourceRect, 
-				destRect, 
-				(Vector2){ 0.0f, 0.0f }, // draw from top-left
-				0.0f,                    // Rotation
-				WHITE                    // Tint
-			);
+            Rectangle sourceRect = { 
+                0.0f, 
+                0.0f, 
+                (float)target.texture.width, 
+                (float)-target.texture.height
+            };
+            Rectangle destRect = { 
+                0.0f, 
+                0.0f, 
+                (float)GAME_WIDTH * PIXEL_SCALE,  
+                (float)GAME_HEIGHT * PIXEL_SCALE  
+            };
+            DrawTexturePro(
+                target.texture, 
+                sourceRect, 
+                destRect, 
+                (Vector2){ 0.0f, 0.0f },
+                0.0f,
+                WHITE
+            );
             
         EndDrawing();
     }
@@ -140,25 +146,25 @@ int main(void){
     
     
     ////////////////////////////////////////CLEANUP///////////////////////////////////////
-	if (currentLevel != NULL) {
-		FreeLevelData(currentLevel);
-		printf("level freed...\n");
-	} else printf("NULL level pointer???\n");
+    if (currentLevel != NULL) {
+        FreeLevelData(currentLevel);
+        printf("level freed...\n");
+    } else printf("NULL level pointer???\n");
     
     if (floorTile.id != 0){
-		UnloadTexture(logoTexture);
-	}
+        UnloadTexture(logoTexture);
+    }
     if (wallTile.id != 0){
-		UnloadTexture(splashTexture);
-	} 
+        UnloadTexture(splashTexture);
+    } 
     if (logoTexture.id != 0){
-		UnloadTexture(logoTexture);
-	}
+        UnloadTexture(logoTexture);
+    }
     if (splashTexture.id != 0){
-		UnloadTexture(splashTexture);
-	}
-	UnloadRenderTexture(target);
-	UnloadFont(GetFontDefault());
+        UnloadTexture(splashTexture);
+    }
+    UnloadRenderTexture(target);
+    UnloadFont(GetFontDefault());
     CloseWindow();
     return 0; 
 }
