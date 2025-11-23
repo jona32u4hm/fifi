@@ -20,13 +20,12 @@ int CheckMapCollision(LevelData *level, float px, float py) {
 }
 
 
-int CheckPlayerCollision(LevelData *level, float playerX, float playerY,
-                         float playerHalfWidth, float playerHalfHeight)
-{
-    float left   = playerX - playerHalfWidth;
-    float right  = playerX + playerHalfWidth;
-    float top    = playerY - playerHalfHeight;
-    float bottom = playerY + playerHalfHeight;
+int CheckPlayerCollision(LevelData *level, Entity* player) {
+
+    float left   = player->dest_rect.x - player->dest_rect.width/2;
+    float right  = player->dest_rect.x + player->dest_rect.width/2;
+    float top    = player->dest_rect.y - player->dest_rect.height/2;
+    float bottom = player->dest_rect.y + player->dest_rect.height/2;
 
     if (CheckMapCollision(level, left, top))    return 1;
     if (CheckMapCollision(level, right, top))   return 1;
