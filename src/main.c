@@ -8,12 +8,14 @@
 #include "raylib.h"
 #include <stdio.h>
 
-
-
 #include "game_data.h"
 #include "logo_screen.h"
 #include "splash_screen.h"
 #include "map_render.h"
+#include "update_entities.h"
+#include "entities.h"
+#include "player.h"
+#include "colision_wall.h"   // ← necesario para usar CheckPlayerCollision
 
 // --- PIXEL ART ENGINE CONFIGURATION ---
 #define GAME_WIDTH 160
@@ -48,6 +50,19 @@ int main(void){
     float timer = 0.0; 
     float alpha = 0.0f; // Initialize alpha to fully transparent (0.0)
     int alphaByte; // for fade in/out effect
+
+    //Here goes all update_entities dependencies
+    Camera2D camera = initialize_camera();
+
+    Entity player = initialize_player();
+    Entity alien = CreateAlien();
+    Entity melee = initialize_melee();
+
+    entity_array proj_array = init_ent_array(PROJECTILE_CAP);
+
+    float cooldown_proj = MIN_TIME_PROJ;
+    float cooldown_melee = MIN_TIME_MELEE;
+
     while (!WindowShouldClose()){
 
 	//dibujar sobre pantalla virtual:
@@ -96,11 +111,18 @@ int main(void){
 					if (wallTile.id == 0){//load si no lo ha hecho
 						wallTile = LoadTexture("assets/pixelart/wall1.png");
 						SetTextureFilter(wallTile, TEXTURE_FILTER_POINT);
-					}
+					}   
+
+
                 break;
             case PLAYING:
+                    BeginMode2D(camera);
+                    
+                    int col = CheckPlayerCollision(currentLevel, &player);
+                    printf("COLISION = %d\n", col);
             		renderMap(currentLevel, floorTile, wallTile);
-            		
+                    update_entities(&camera, &player, &alien, &melee, &proj_array, &cooldown_proj, &cooldown_melee);
+            		EndMode2D();
             		
                 break;
             case PAUSED:
