@@ -7,7 +7,10 @@
 #define RIGHT 4
 
 #define PROJECTILE_CAP  99
-#define MIN_TIME = 5
+#define MIN_TIME_PROJ 1.0f
+#define MIN_TIME_MELEE 0.5f
+#define LIFE_TIME_MELEE 0.5f
+#define MAX_I_TIME 0.6            //Inmunity time for entities, must be greater than LIFE_TIME_MELEE
 
 #include <raylib.h> //The textures struct will be included inside the entity struct 
 typedef struct Textures { 
@@ -22,9 +25,10 @@ typedef struct Entity {
     int horizontal_direction;
     int current_direction;
     struct Textures textures; 
+    float hp; 
+    float i_time;
     Texture2D current_texture; //Says what texture will be drawn 
     Rectangle dest_rect; 
-    float hp; 
 } Entity; 
 
 typedef struct entity_array {
@@ -38,5 +42,9 @@ void add_projectile(entity_array* arr, Entity* player);
 
 void move_projectile(Entity* proj);
 
+Entity initialize_melee();
+void spawn_melee(Entity* melee, Entity* player);
+void colision_projectile_alien(Entity* alien, entity_array* proj_array);
+void colision_melee_alien(Entity* alien, Entity* melee);
 #endif
 

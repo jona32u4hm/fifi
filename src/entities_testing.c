@@ -10,6 +10,9 @@
 // --------------------------------------
 //move_player changes player position, direction and current texture
 //Initializing main
+
+
+
 int main(void) {
 
     const int screenWidth = GAME_WIDTH * PIXEL_SCALE;
@@ -29,11 +32,13 @@ int main(void) {
     
     Entity player = initialize_player();
     Entity alien = CreateAlien();
+    Entity melee = initialize_melee();
     
     entity_array proj_array = init_ent_array(PROJECTILE_CAP);
-
-    float cooldown = 5.0f;
-
+    
+    float cooldown_proj = MIN_TIME_PROJ;
+    float cooldown_melee = MIN_TIME_MELEE;
+    
     //Opening window
     while(!WindowShouldClose()) {
 
@@ -41,27 +46,52 @@ int main(void) {
         ClearBackground(RAYWHITE);
 	    BeginMode2D(camera);
 
-            if (cooldown < 5.0f) {
-                cooldown += GetFrameTime();
+            if (cooldown_proj < MIN_TIME_PROJ) {
+                cooldown_proj += GetFrameTime();
             }
 
-            if (player.hp > 0) {
-                move_player(&player, &camera);
+            if (player.hp > 0.0f) {
+                if  (melee.hp <= 0.0f){
+                    move_player(&player, &camera);
+                }
                 DrawTexturePro(player.current_texture, (Rectangle){0, 0, player.horizontal_direction * 16, 16}, player.dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
-}
-            if (IsKeyDown(KEY_E) && cooldown >= 5.0f) {
-                add_projectile(&proj_array, &player);
-                cooldown = 0.0f;
             }
+            if (IsKeyDown(KEY_E) && cooldown_proj >= MIN_TIME_PROJ) {
+                add_projectile(&proj_array, &player);
+                cooldown_proj = 0.0f;
+            }
+
+            if (IsKeyDown(KEY_Q) && melee.hp <= 0.0f && cooldown_melee >= MIN_TIME_MELEE) {
+                spawn_melee(&melee, &player);
+            }
+            if (melee.hp > 0.0f) {
+                DrawTexturePro(melee.current_texture, (Rectangle){0, 0, melee.horizontal_direction * 16, 16}, melee.dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
+                melee.hp -= GetFrameTime();
+                if (melee.hp <= 0.0f) {
+                    cooldown_melee = 0.0f;
+                }
+            }       
+
+            if  (cooldown_melee <= MIN_TIME_MELEE && melee.hp <= 0) {
+                cooldown_melee += GetFrameTime();
+            }
+
+
             for (int i = 0; i < proj_array.size; i++) {
                 DrawTexturePro((*(proj_array.data + i)).current_texture, (Rectangle){0, 0, (*(proj_array.data + i)).horizontal_direction * 8, 8}, (*(proj_array.data + i)).dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
                 move_projectile(proj_array.data + i);
             }
-
+            if (alien.i_time <=0) { 
+                colision_projectile_alien(&alien, &proj_array);
+            }
+            if (alien.i_time <=0 && melee.hp > 0) {
+                colision_melee_alien(&alien, &melee);
+            }
             if (alien.hp > 0) {
                 move_alien(&alien);
                 DrawTexturePro(alien.current_texture, (Rectangle){0, 0, alien.horizontal_direction * 16, 16}, alien.dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
-}
+            }
+            alien.i_time -= GetFrameTime();
 
         
 
