@@ -6,7 +6,10 @@
 // Verifica si un punto px, py toca una pared (tile == 1)
 int CheckMapCollision(LevelData *level, float px, float py);
 
-// Colisión rectangular del jugador
+// Colisión del jugador
 int CheckPlayerCollision(LevelData *level, Entity* player);
+
+//Colisión de entidades
+int CheckEntityCollision(LevelData *level, Entity* e);
 
 #endif
