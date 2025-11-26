@@ -62,6 +62,8 @@ int main(void){
 
     float cooldown_proj = MIN_TIME_PROJ;
     float cooldown_melee = MIN_TIME_MELEE;
+	logoTexture = LoadTexture("assets/pixelart/logo.png");
+	SetTextureFilter(logoTexture, TEXTURE_FILTER_POINT);
 
     while (!WindowShouldClose()){
 
@@ -116,14 +118,31 @@ int main(void){
 
                 break;
             case PLAYING:
-                    BeginMode2D(camera);
-                    
-                    int col = CheckPlayerCollision(currentLevel, &player);
-                    printf("COLISION = %d\n", col);
-            		renderMap(currentLevel, floorTile, wallTile);
-                    update_entities(&camera, &player, &alien, &melee, &proj_array, &cooldown_proj, &cooldown_melee);
+			{
+					float oldX = player.dest_rect.x;
+					float oldY = player.dest_rect.y;
+					float oldAX= alien.dest_rect.x;
+					float oldAY= alien.dest_rect.y; 
+					BeginMode2D(camera);
+					ClearBackground(BLACK);
+                    renderMap(currentLevel, floorTile, wallTile);
+					update_entities(&camera, &player, &alien, &melee, &proj_array, &cooldown_proj, &cooldown_melee);
+
+					if (CheckPlayerCollision(currentLevel, &player)) { //collision for player
+						player.dest_rect.x=oldX;
+						player.dest_rect.y=oldY;
+					}
+					if (CheckEntityCollision(currentLevel, &alien)){ //collision for entities
+						alien.dest_rect.x=oldAX;
+						alien.dest_rect.y=oldAY;
+					}
             		EndMode2D();
-            		
+					camera.offset = (Vector2) { GAME_WIDTH/2, GAME_HEIGHT/2};
+					camera.target= (Vector2) {
+						player.dest_rect.x+player.dest_rect.width/2,
+						player.dest_rect.y + player.dest_rect.height/2
+					};
+			}
                 break;
             case PAUSED:
                 break;
