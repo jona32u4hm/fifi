@@ -144,5 +144,29 @@ void colision_melee_alien(Entity* alien, Entity* melee) {
         alien->hp -= 40;
         alien->i_time = MAX_I_TIME;
     }
+
+
+void move_alien_patrol(Entity* alien)
+{
+    const float speed = 20.0f;
+    float delta = speed * GetFrameTime();
+
+    float minX = alien->patrol_start_x;
+    float maxX = alien->patrol_start_x + alien->patrol_limit;
+
+    if (alien->patrol_direction == 1) {          
+        alien->dest_rect.x += delta;
+        if (alien->dest_rect.x >= maxX) {
+            alien->dest_rect.x = maxX;
+            alien->patrol_direction = -1;
+        }
+    }
+    else {          
+        alien->dest_rect.x -= delta;
+        if (alien->dest_rect.x <= minX) {
+            alien->dest_rect.x = minX;
+            alien->patrol_direction = 1;
+        }
+    }
 }
 
