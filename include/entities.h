@@ -33,6 +33,10 @@ typedef struct Entity {
     Rectangle dest_rect; 
     unsigned char state;
     //for future versions there should be an enemy type flag
+    int patrol_direction;
+    int patrol_counter;
+    int patrol_limit;
+    int patrol_start_x;
 } Entity; 
 
 typedef struct entity_array {
@@ -50,5 +54,6 @@ Entity initialize_melee();
 void spawn_melee(Entity* melee, Entity* player);
 void colision_projectile_alien(Entity* alien, entity_array* proj_array);
 void colision_melee_alien(Entity* alien, Entity* melee);
+void move_alien_patrol(Entity* alien);
 #endif
 
