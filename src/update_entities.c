@@ -86,5 +86,25 @@ void update_entities(Camera2D* camera, Entity* player, Entity* alien, Entity* wu
             move_alien_guard(wuwa_the_alien, player, currentLevel);
         }
         wuwa_the_alien->i_time -= GetFrameTime();
+        
+    if (patrol_alien->i_time <= 0) {
+        colision_projectile_alien(patrol_alien, proj_array);
+    }
+    if (patrol_alien->i_time <= 0 && melee->hp > 0) {
+        colision_melee_alien(patrol_alien, melee);
+    }
+
+    if (patrol_alien->hp > 0) {
+        move_alien_patrol(patrol_alien);   // <<< AQUÍ SE MUEVE EL NUEVO ALIEN
+
+        DrawTexturePro(
+            patrol_alien->current_texture,
+            (Rectangle){0, 0, patrol_alien->horizontal_direction * 16, 16},
+            patrol_alien->dest_rect,
+            (Vector2){0, 0}, 0.0, PURPLE
+        );
+    }
+
+    patrol_alien->i_time -= GetFrameTime();
 }
 
