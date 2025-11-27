@@ -12,7 +12,7 @@
 #define PLAYER_FOLLOW_RANGE 3*16
 
 //alien guard:
-void update_alien_guard(Entity* alien, Entity* player, LevelData* currentLevel);
+void move_alien_guard(Entity* alien, Entity* player, LevelData* currentLevel);
  
 
 // --- MOVEMENT FUNCTIONS ---

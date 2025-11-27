@@ -63,7 +63,7 @@ void move_alien(Entity* alien) {
 
 
 
-void update_alien_guard(Entity* alien, Entity* player, LevelData* currentLevel) {
+void move_alien_guard(Entity* alien, Entity* player, LevelData* currentLevel) {
 //for future versions, enemy type should be checked before running this routine
 
 	//check player in range?
