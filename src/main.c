@@ -213,5 +213,24 @@ int main(void){
 	UnloadRenderTexture(target);
 	UnloadFont(GetFontDefault());
     CloseWindow();
+
+    // Unload player textures
+    UnloadTexture(player.textures.texture_up);
+    UnloadTexture(player.textures.texture_down);
+    UnloadTexture(player.textures.texture_side);
+
+    // Unload alien textures
+    UnloadTexture(alien.textures.texture_up);
+    UnloadTexture(alien.textures.texture_down);
+    UnloadTexture(alien.textures.texture_side);
+    for (int i = 0; i < proj_array->size; i++) {
+        UnloadTexture((*(proj_array->data + i)).current_texture);
+    }
+    UnloadTexture(melee.textures.texture_up);
+    UnloadTexture(melee.textures.texture_down);
+    UnloadTexture(melee.textures.texture_side);
+    free(proj_array.data);
     return 0; 
 }
+
+
