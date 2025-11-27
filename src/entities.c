@@ -144,8 +144,7 @@ void colision_melee_alien(Entity* alien, Entity* melee) {
         alien->hp -= 40;
         alien->i_time = MAX_I_TIME;
     }
-
-
+}
 void move_alien_patrol(Entity* alien)
 {
     const float speed = 20.0f;
