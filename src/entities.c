@@ -87,23 +87,23 @@ void add_projectile(entity_array* arr, Entity* player) {
 void move_projectile(Entity* proj) {
     switch (proj->current_direction) {
     case UP:
-        proj->dest_rect.y += -10 * GetFrameTime();
+        proj->dest_rect.y += -PROJECTILE_SPEED * GetFrameTime();
         break;
 
     case LEFT:
-        proj->dest_rect.x += -10 * GetFrameTime();
+        proj->dest_rect.x += -PROJECTILE_SPEED * GetFrameTime();
         break;
 
     case DOWN:
-        proj->dest_rect.y += 10 * GetFrameTime();
+        proj->dest_rect.y += PROJECTILE_SPEED * GetFrameTime();
         break;
 
     case RIGHT:
-        proj->dest_rect.x += 10 * GetFrameTime();
+        proj->dest_rect.x += PROJECTILE_SPEED * GetFrameTime();
         break;
     default:
         printf("Error: projectile current direction value not valid\n");
-        proj->dest_rect.y += -10 * GetFrameTime();
+        proj->dest_rect.y += -PROJECTILE_SPEED * GetFrameTime();
         break;
     }
 
