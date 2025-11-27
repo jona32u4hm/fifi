@@ -37,31 +37,6 @@ void move_player(Entity* player, Camera2D* camera) {
 	    player->current_direction = RIGHT;
     }
 }
-//move_player changes alien position, direction and current texture
-void move_alien(Entity* alien) {
-    if (IsKeyDown(KEY_UP)){
-        alien->dest_rect.y += -10 *  GetFrameTime();
-        alien->current_texture = alien->textures.texture_up;
-	    alien->vertical_direction = 1;
-    }
-    if (IsKeyDown(KEY_LEFT)){
-        alien->dest_rect.x += -10 * GetFrameTime();
-        alien->current_texture = alien->textures.texture_side;
-        alien->horizontal_direction = 1;
-    }
-    if (IsKeyDown(KEY_DOWN)){
-        alien->dest_rect.y += 10 * GetFrameTime();
-        alien->current_texture = alien->textures.texture_down;
-	    alien->vertical_direction = -1;
-    }
-    if (IsKeyDown(KEY_RIGHT)){
-        alien->dest_rect.x += 10 * GetFrameTime();
-        alien->current_texture = alien->textures.texture_side;
-        alien->horizontal_direction = -1;
-    }
-}
-
-
 
 void move_alien_guard(Entity* alien, Entity* player, LevelData* currentLevel) {
 //for future versions, enemy type should be checked before running this routine

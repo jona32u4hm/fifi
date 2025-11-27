@@ -9,7 +9,52 @@ entity_array init_ent_array(int capacity) {
         .size = 0,
     };
     return ent_array;
-};
+}
+
+Entity CreateAlien(int type, float x, float y) {
+    // Load textures
+    Texture2D alien_up   = LoadTexture("assets/pixelart/alien_up.png");
+    Texture2D alien_side = LoadTexture("assets/pixelart/alien_side_0.png");
+    Texture2D alien_down = LoadTexture("assets/pixelart/alien_down.png");
+
+    // Initialize texture struct
+    Textures alien_textures = (Textures){
+        .texture_up = alien_up,
+        .texture_side = alien_side,
+        .texture_down = alien_down,
+    };
+
+    // Create and return the fully initialized entity
+    Entity alien = (Entity){
+        .vertical_direction = 1,
+        .horizontal_direction = 1,
+        .current_direction = 2,
+        .textures = alien_textures,
+        .current_texture = alien_textures.texture_down,
+        .hp = 100.0f,
+        .i_time = 0.0f,
+        .type = type,
+        .dest_rect = (Rectangle){
+            .x = x,
+            .y = y,
+            .width = 16,
+            .height = 16,
+        },
+        .initial_x_position = x,
+    };
+
+    return alien;
+}
+
+void add_alien(entity_array* arr, int type, float xposition, float yposition) {
+    if (arr->size >= arr->cap) {
+        printf("Error: array full\n");
+        return;
+    }
+    arr->data[arr->size] = CreateAlien(type, xposition, yposition);
+    arr->size++;
+
+}
 
 void add_projectile(entity_array* arr, Entity* player) {
     if (arr->size >= arr->cap) {
@@ -62,40 +107,6 @@ void move_projectile(Entity* proj) {
         break;
     }
 
-}
-
-Entity CreateAlien(int type) {
-    // Load textures
-    Texture2D alien_up   = LoadTexture("assets/pixelart/alien_up.png");
-    Texture2D alien_side = LoadTexture("assets/pixelart/alien_side_0.png");
-    Texture2D alien_down = LoadTexture("assets/pixelart/alien_down.png");
-
-    // Initialize texture struct
-    Textures alien_textures = (Textures){
-        .texture_up = alien_up,
-        .texture_side = alien_side,
-        .texture_down = alien_down,
-    };
-
-    // Create and return the fully initialized entity
-    Entity alien = (Entity){
-        .vertical_direction = 1,
-        .horizontal_direction = 1,
-        .current_direction = 2,
-        .textures = alien_textures,
-        .current_texture = alien_textures.texture_down,
-        .hp = 100.0f,
-        .i_time = 0.0f,
-        .type = type,
-        .dest_rect = (Rectangle){
-            .x = 85,
-            .y = 50,
-            .width = 16,
-            .height = 16,
-        },
-    };
-
-    return alien;
 }
 
 
@@ -184,3 +195,25 @@ void colision_melee_alien(Entity* alien, Entity* melee) {
     }
 }
 
+void move_alien_patrol(Entity* alien) {
+    const float speed = 20.0f;
+    float delta = speed * GetFrameTime();
+
+    float minX = alien->initial_x_position;
+    float maxX = alien->initial_x_position + PATROL_LIMIT;
+
+    if (alien->horizontal_direction == 1) {
+        alien->dest_rect.x += delta;
+        if (alien->dest_rect.x >= maxX) {
+            alien->dest_rect.x = maxX;
+            alien->horizontal_direction = -1;
+        }
+    }
+    else {
+        alien->dest_rect.x -= delta;
+        if (alien->dest_rect.x <= minX) {
+            alien->dest_rect.x = minX;
+            alien->horizontal_direction = 1;
+        }
+    }
+}

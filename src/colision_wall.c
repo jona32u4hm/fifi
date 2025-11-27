@@ -11,6 +11,7 @@ int CheckMapCollision(LevelData *level, float px, float py) {
     // verifica límites
     if (tileX < 0 || tileX >= level->mapWidth ||
         tileY < 0 || tileY >= level->mapHeight) {
+        printf("Debug: Out of map");
         return 1; // fuera del mapa = colisión
     }
 

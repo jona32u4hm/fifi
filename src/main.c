@@ -57,11 +57,13 @@ int main(void){
     Camera2D camera = initialize_camera();
 
     Entity player = initialize_player();
-    Entity alien = CreateAlien(DUMMY_ALIEN);
-    Entity alien2 = CreateAlien(ALIEN_GUARD);
     Entity melee = initialize_melee();
 
     entity_array proj_array = init_ent_array(PROJECTILE_CAP);
+    entity_array aliens_array = init_ent_array(ALIENS_CAP);  
+    add_alien(&aliens_array, ALIEN_PATROL, 85, 50);
+    add_alien(&aliens_array, ALIEN_GUARD, 85, 50);
+      
 
     float cooldown_proj = MIN_TIME_PROJ;
     float cooldown_melee = MIN_TIME_MELEE;
@@ -122,31 +124,13 @@ int main(void){
                 break;
             case PLAYING:
 			{
+					BeginMode2D(camera);                    
                     
-					float oldX = player.dest_rect.x;
-					float oldY = player.dest_rect.y;
-					float oldAX= alien.dest_rect.x;
-					float oldAY= alien.dest_rect.y; 
-					BeginMode2D(camera);
 					ClearBackground(BLACK);
                     renderMap(currentLevel, floorTile, wallTile);
-					update_entities(&camera, &player, &alien, &alien2, &melee, &proj_array, &cooldown_proj, &cooldown_melee, currentLevel);
+					update_entities(&camera, &player, &aliens_array, &melee, &proj_array, &cooldown_proj, &cooldown_melee, currentLevel);
                     
-					if (CheckPlayerCollision(currentLevel, &player)) { //collision for player
-						player.dest_rect.x=oldX;
-						player.dest_rect.y=oldY;
-					}
-					if (CheckEntityCollision(currentLevel, &alien)){ //collision for entities
-						alien.dest_rect.x=oldAX;
-						alien.dest_rect.y=oldAY;
-					}
-                    
-					if (CheckPlayerEnemyCollision(&player, &alien) && player.i_time <= 0) {
-                        player.hp -= ALIEN_DAMAGE;
-                        player.i_time = MAX_I_TIME;
-					}
-                    player.i_time -= GetFrameTime();
-            		EndMode2D();
+                    EndMode2D();
                     
 					camera.offset = (Vector2) { GAME_WIDTH/2, GAME_HEIGHT/2};
 					camera.target= (Vector2) {
@@ -222,11 +206,14 @@ int main(void){
     UnloadTexture(player.textures.texture_side);
 
     // Unload alien textures
-    UnloadTexture(alien.textures.texture_up);
-    UnloadTexture(alien.textures.texture_down);
-    UnloadTexture(alien.textures.texture_side);
+    for (int i = 0; i < aliens_array.size; i++) {
+        UnloadTexture((aliens_array.data + i)->textures.texture_up);
+        UnloadTexture((aliens_array.data + i)->textures.texture_down);
+        UnloadTexture((aliens_array.data + i)->textures.texture_side);
+    }
+
     for (int i = 0; i < proj_array.size; i++) {
-        UnloadTexture((*(proj_array.data + i)).current_texture);
+        UnloadTexture((proj_array.data + i)->current_texture);
     }
     UnloadTexture(melee.textures.texture_up);
     UnloadTexture(melee.textures.texture_down);

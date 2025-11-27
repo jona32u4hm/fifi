@@ -17,7 +17,6 @@ void move_alien_guard(Entity* alien, Entity* player, LevelData* currentLevel);
 
 // --- MOVEMENT FUNCTIONS ---
 void move_player(Entity* player, Camera2D* camera);
-void move_alien(Entity* alien);
 
 // --- CREATION FUNCTIONS ---
 Entity initialize_player();

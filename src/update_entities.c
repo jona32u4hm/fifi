@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "entities.h"
 #include "player.h"
+#include "colisions.h"
 // --- PIXEL ART ENGINE CONFIGURATION ---
 #define GAME_WIDTH 160
 #define GAME_HEIGHT 144
@@ -19,72 +20,102 @@ Camera2D initialize_camera() {
 
 
 
-void update_entities(Camera2D* camera, Entity* player, Entity* alien, Entity* wuwa_the_alien, Entity* melee, entity_array* proj_array, float* cooldown_proj, float* cooldown_melee, LevelData* currentLevel) {
-        //Cooldown should charge over time if not full
-        if (*cooldown_proj < MIN_TIME_PROJ) {
-            *cooldown_proj += GetFrameTime();
-        }
-        //Calling player_movement. Player cant move if dead or while using melee
-        if ((*(player)).hp > 0.0f) {
-            if  (melee->hp <= 0.0f) {
-                move_player(player, camera);
-                
-            }
-            DrawTexturePro(player->current_texture, (Rectangle){0, 0, player->horizontal_direction * 16, 16}, player->dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
-        }
-        //If player presses E, can shoot if cooldown is full
-        if (IsKeyDown(KEY_E) && *cooldown_proj >= MIN_TIME_PROJ) {
-            add_projectile(proj_array, player);
-            *cooldown_proj = 0.0f;
-        }
-        //With Q player can melee if cooldown is full
-        if (IsKeyDown(KEY_Q) && melee->hp <= 0.0f && *cooldown_melee >= MIN_TIME_MELEE) {
-            spawn_melee(melee, player);
-        }
-        //Drawing melee
-        if (melee->hp > 0.0f) {
-            DrawTexturePro(melee->current_texture, (Rectangle){0, 0, melee->horizontal_direction * 16, 16}, melee->dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
-            melee->hp -= GetFrameTime(); //Melee hp is lowered so that it has limited time
-            if (melee->hp <= 0.0f) {
-                *cooldown_melee = 0.0f; //Cooldown is depleted
-            }
-        }       
-        //Charging melee cooldown only if player is not currently doing melee
-        if  (*cooldown_melee <= MIN_TIME_MELEE && melee->hp <= 0) {
-            *cooldown_melee += GetFrameTime();
-        }
+void update_entities(Camera2D* camera, Entity* player, entity_array* aliens_array, Entity* melee, entity_array* proj_array, float* cooldown_proj, float* cooldown_melee, LevelData* currentLevel) {
+    
+    //Varaibles for colissions with walls
 
-        //Drawing and moving all projectiles
-        for (int i = 0; i < proj_array->size; i++) {
-            DrawTexturePro((*(proj_array->data + i)).current_texture, (Rectangle){0, 0, (*(proj_array->data + i)).horizontal_direction * 8, 8}, (*(proj_array->data + i)).dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
-            move_projectile(proj_array->data + i);
+    float oldX = player->dest_rect.x;
+	float oldY = player->dest_rect.y;
+
+
+
+    //Cooldown should charge over time if not full
+    if (*cooldown_proj < MIN_TIME_PROJ) {
+        *cooldown_proj += GetFrameTime();
+    }
+    //Calling player_movement. Player cant move if dead or while using melee
+    if ((*(player)).hp > 0.0f) {
+        if  (melee->hp <= 0.0f) {
+            move_player(player, camera);
+            
         }
+        DrawTexturePro(player->current_texture, (Rectangle){0, 0, player->horizontal_direction * 16, 16}, player->dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
+    }
+
+    //Colisions for player with walls
+    if (CheckPlayerCollision(currentLevel, player)) {
+        printf("Debug: colision detected");
+        player->dest_rect.x=oldX;
+        player->dest_rect.y=oldY;
+    }
+
+    //If player presses E, can shoot if cooldown is full
+    if (IsKeyDown(KEY_E) && *cooldown_proj >= MIN_TIME_PROJ) {
+        add_projectile(proj_array, player);
+        *cooldown_proj = 0.0f;
+    }
+    //With Q player can melee if cooldown is full
+    if (IsKeyDown(KEY_Q) && melee->hp <= 0.0f && *cooldown_melee >= MIN_TIME_MELEE) {
+        spawn_melee(melee, player);
+    }
+    //Drawing melee
+    if (melee->hp > 0.0f) {
+        DrawTexturePro(melee->current_texture, (Rectangle){0, 0, melee->horizontal_direction * 16, 16}, melee->dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
+        melee->hp -= GetFrameTime(); //Melee hp is lowered so that it has limited time
+        if (melee->hp <= 0.0f) {
+            *cooldown_melee = 0.0f; //Cooldown is depleted
+        }
+    }       
+    //Charging melee cooldown only if player is not currently doing melee
+    if  (*cooldown_melee <= MIN_TIME_MELEE && melee->hp <= 0) {
+        *cooldown_melee += GetFrameTime();
+    }
+
+    //Drawing and moving all projectiles
+    for (int i = 0; i < proj_array->size; i++) {
+        DrawTexturePro((proj_array->data + i)->current_texture, (Rectangle){0, 0, (proj_array->data + i)->horizontal_direction * 8, 8}, (proj_array->data + i)->dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
+        move_projectile(proj_array->data + i);
+    }
+    
+    float oldAX;
+    float oldAY;
+    for (int i = 0; i < aliens_array->size; i++) {
+    	oldAX = (aliens_array->data + i)->dest_rect.x;
+        oldAY = (aliens_array->data + i)->dest_rect.y; 
+
         //Checking if a projectile or melee touches an enemy while not in inmunity time
-        if (alien->i_time <=0) { 
-            colision_projectile_alien(alien, proj_array);
+        if ((aliens_array->data + i)->i_time <=0) { 
+            colision_projectile_alien(aliens_array->data + i, proj_array);
         }
-        if (alien->i_time <=0 && melee->hp > 0) {
-            colision_melee_alien(alien, melee);
+        if ((aliens_array->data + i)->i_time <=0 && melee->hp > 0) {
+            colision_melee_alien(aliens_array->data + i, melee);
         }
         //Drawing alien
-        if (alien->hp > 0) {
-            move_alien(alien);
-            DrawTexturePro(alien->current_texture, (Rectangle){0, 0, alien->horizontal_direction * 16, 16}, alien->dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
+        if ((aliens_array->data + i)->hp > 0) {
+            switch ((aliens_array->data + i)->type) {
+                case ALIEN_PATROL:
+                    move_alien_patrol(aliens_array->data + i);
+                    DrawTexturePro((aliens_array->data + i)->current_texture, (Rectangle){0, 0, (aliens_array->data + i)->horizontal_direction * 16, 16}, (aliens_array->data + i)->dest_rect, (Vector2){0, 0}, 0.0, RAYWHITE);
+                    break;
+                case ALIEN_GUARD: 
+                    move_alien_guard(aliens_array->data + i, player, currentLevel);
+                    DrawTexturePro((aliens_array->data + i)->current_texture, (Rectangle){0, 0, (aliens_array->data + i)->horizontal_direction * 16, 16}, (aliens_array->data + i)->dest_rect, (Vector2){0, 0}, 0.0, BLUE);
+
+                    break;
+            }
         }
-        alien->i_time -= GetFrameTime();
-        
-        // Now for wuwa the alien, the other type of alien
-        if (wuwa_the_alien->i_time <=0) { 
-            colision_projectile_alien(wuwa_the_alien, proj_array);
+        (aliens_array->data + i)->i_time -= GetFrameTime();
+        //Colisions enemy with walls
+        if (CheckEntityCollision(currentLevel, aliens_array->data + i)){
+            (aliens_array->data + i)->dest_rect.x=oldAX;
+            (aliens_array->data + i)->dest_rect.y=oldAY;
         }
-        if (wuwa_the_alien->i_time <=0 && melee->hp > 0) {
-            colision_melee_alien(wuwa_the_alien, melee);
+        if (CheckPlayerEnemyCollision(player, aliens_array->data + i) && player->i_time <= 0) {
+            player->hp -= ALIEN_DAMAGE;
+            player->i_time = MAX_I_TIME;
         }
-        if (wuwa_the_alien->hp > 0) {
-			//wuwa's routine
-            DrawTexturePro(wuwa_the_alien->current_texture, (Rectangle){0, 0, wuwa_the_alien->horizontal_direction * 16, 16}, wuwa_the_alien->dest_rect, (Vector2){0, 0}, 0.0, ORANGE);
-            move_alien_guard(wuwa_the_alien, player, currentLevel);
-        }
-        wuwa_the_alien->i_time -= GetFrameTime();
+    }
+        player->i_time -= GetFrameTime();
+           
 }
 

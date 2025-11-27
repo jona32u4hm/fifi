@@ -6,7 +6,8 @@
 #define DOWN 3
 #define RIGHT 4
 
-#define PROJECTILE_CAP  99
+#define PROJECTILE_CAP 99
+#define ALIENS_CAP 99
 #define MIN_TIME_PROJ 1.0f
 #define MIN_TIME_MELEE 0.5f
 #define LIFE_TIME_MELEE 0.5f
@@ -14,12 +15,14 @@
 #define PLAYER_MAX_I_TIME 1.0f
 #define ALIEN_DAMAGE 20           //Damage dealt by aliens to player
 
+//Define enemy types
 #define PLAYER 1
-#define DUMMY_ALIEN 2
+#define ALIEN_PATROL 2
 #define ALIEN_GUARD 3
 #define PROJECTILE 4
 #define MELEE 5
 
+#define PATROL_LIMIT 64           //Patrol limit for alien patrol
 
 #include <raylib.h> //The textures struct will be included inside the entity struct 
 typedef struct Textures { 
@@ -36,6 +39,7 @@ typedef struct Entity {
     struct Textures textures; 
     float hp; 
     float i_time;
+    float initial_x_position;
     Texture2D current_texture; //Says what texture will be drawn 
     Rectangle dest_rect; 
     unsigned char state;
@@ -50,6 +54,8 @@ typedef struct entity_array {
 } entity_array;
 
 entity_array init_ent_array(int capacity);
+Entity CreateAlien(int type, float x, float y);
+void add_alien(entity_array* arr, int type, float xposition, float yposition);
 void add_projectile(entity_array* arr, Entity* player);
 
 void move_projectile(Entity* proj);
@@ -58,7 +64,6 @@ Entity initialize_melee();
 void spawn_melee(Entity* melee, Entity* player);
 void colision_projectile_alien(Entity* alien, entity_array* proj_array);
 void colision_melee_alien(Entity* alien, Entity* melee);
-Entity CreateAlien(int type);
-
+void move_alien_patrol(Entity* alien);
 #endif
 
