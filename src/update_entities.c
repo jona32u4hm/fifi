@@ -118,8 +118,6 @@ void update_entities(Camera2D* camera, Entity* player, entity_array* aliens_arra
         }
     }
         player->i_time -= GetFrameTime();
-        printf("\nx: %f\n", player->dest_rect.x);
-        printf("\ny: %f\n", player->dest_rect.y);
 
 }
 
