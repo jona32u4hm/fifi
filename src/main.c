@@ -43,8 +43,8 @@ int main(void){
     InitWindow(screenWidth, screenHeight, "FINDING FIFI");
     SetTargetFPS(30);
 	
-	RenderTexture2D target = LoadRenderTexture(GAME_WIDTH, GAME_HEIGHT);	//la pantalla virtual de baja resolución
-    SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);    // para evitar que se vea borroso
+	RenderTexture2D target = LoadRenderTexture(GAME_WIDTH, GAME_HEIGHT);
+    SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);    
     
     
     GameState currentState = LOGO; //game_data.h
@@ -57,8 +57,12 @@ int main(void){
     Camera2D camera = initialize_camera();
 
     Entity player = initialize_player();
-    Entity alien = CreateAlien();
-    Entity alien2 = CreateAlien();
+    Entity alien = CreateAlien();  //normal alien
+    Entity alien2 = CreateAlien();  //wuwa
+    Entity patrol_alien = CreateAlien();   // patrol alien
+	patrol_alien.patrol_start_x = patrol_alien.dest_rect.x;
+    patrol_alien.patrol_limit = 60;
+    patrol_alien.patrol_direction = 1; //these last 3 lines are necessary for patrol_alien's movement
     Entity melee = initialize_melee();
 
     entity_array proj_array = init_ent_array(PROJECTILE_CAP);
