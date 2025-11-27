@@ -68,6 +68,7 @@ int main(void){
     float cooldown_proj = MIN_TIME_PROJ;
     float cooldown_melee = MIN_TIME_MELEE;
 	logoTexture = LoadTexture("assets/pixelart/logo.png");
+    Texture2D gameOver = LoadTexture("assets/pixelart/GameOver.png");
 	SetTextureFilter(logoTexture, TEXTURE_FILTER_POINT);
 
     while (!WindowShouldClose()){
@@ -145,6 +146,10 @@ int main(void){
             case PAUSED:
                 break;
             case GAMEOVER:
+                    DrawTexture(gameOver,
+                    (GAME_WIDTH/2) - (logoTexture.width/2),
+                    (GAME_HEIGHT/2) - (logoTexture.height/2),
+                    RAYWHITE);
                 break;
         }
         EndTextureMode();
@@ -219,6 +224,8 @@ int main(void){
     UnloadTexture(melee.textures.texture_down);
     UnloadTexture(melee.textures.texture_side);
     free(proj_array.data);
+
+    UnloadTexture(gameOver);
     return 0; 
 }
 
