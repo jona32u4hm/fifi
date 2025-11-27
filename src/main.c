@@ -57,8 +57,8 @@ int main(void){
     Camera2D camera = initialize_camera();
 
     Entity player = initialize_player();
-    Entity alien = CreateAlien();
-    Entity alien2 = CreateAlien();
+    Entity alien = CreateAlien(DUMMY_ALIEN);
+    Entity alien2 = CreateAlien(ALIEN_GUARD);
     Entity melee = initialize_melee();
 
     entity_array proj_array = init_ent_array(PROJECTILE_CAP);
@@ -130,7 +130,6 @@ int main(void){
 					BeginMode2D(camera);
 					ClearBackground(BLACK);
                     renderMap(currentLevel, floorTile, wallTile);
-                    printf("\nMelee hp before updating: %f\n", melee.hp);
 					update_entities(&camera, &player, &alien, &alien2, &melee, &proj_array, &cooldown_proj, &cooldown_melee, currentLevel);
                     
 					if (CheckPlayerCollision(currentLevel, &player)) { //collision for player
@@ -142,17 +141,11 @@ int main(void){
 						alien.dest_rect.y=oldAY;
 					}
                     
-					if (CheckPlayerEnemyCollision(&player, &alien)) {
-                        
-						player.dest_rect.x=oldX;
-						player.dest_rect.y=oldY;
-
+					if (CheckPlayerEnemyCollision(&player, &alien) && player.i_time <= 0) {
+                        player.hp -= ALIEN_DAMAGE;
+                        player.i_time = MAX_I_TIME;
 					}
-					if (CheckPlayerEnemyCollision(&player, &alien)) {
-						alien.dest_rect.x=oldAX;
-						alien.dest_rect.y=oldAY;
-
-					}
+                    player.i_time -= GetFrameTime();
             		EndMode2D();
                     
 					camera.offset = (Vector2) { GAME_WIDTH/2, GAME_HEIGHT/2};
@@ -160,6 +153,9 @@ int main(void){
 						player.dest_rect.x+player.dest_rect.width/2,
 						player.dest_rect.y + player.dest_rect.height/2
 					};
+                    if (player.hp <= 0) {
+                        currentState = GAMEOVER;
+                    }   
 			}
                 break;
             case PAUSED:

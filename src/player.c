@@ -161,6 +161,7 @@ Entity initialize_player() {
         .current_texture = player_textures.texture_down,
         .hp = 100.0f,
         .i_time = 0.0f,
+        .type = PLAYER,
         .dest_rect = (Rectangle){
             .x = 50,
             .y = 50,
@@ -171,39 +172,5 @@ Entity initialize_player() {
 
     return player;
 }
-
-Entity CreateAlien() {
-    // Load textures
-    Texture2D alien_up   = LoadTexture("assets/pixelart/alien_up.png");
-    Texture2D alien_side = LoadTexture("assets/pixelart/alien_side_0.png");
-    Texture2D alien_down = LoadTexture("assets/pixelart/alien_down.png");
-
-    // Initialize texture struct
-    Textures alien_textures = (Textures){
-        .texture_up = alien_up,
-        .texture_side = alien_side,
-        .texture_down = alien_down,
-    };
-
-    // Create and return the fully initialized entity
-    Entity alien = (Entity){
-        .vertical_direction = 1,
-        .horizontal_direction = 1,
-        .current_direction = 2,
-        .textures = alien_textures,
-        .current_texture = alien_textures.texture_down,
-        .hp = 100.0f,
-        .i_time = 0.0f,
-        .dest_rect = (Rectangle){
-            .x = 85,
-            .y = 50,
-            .width = 16,
-            .height = 16,
-        },
-    };
-
-    return alien;
-}
-
 
 

@@ -21,7 +21,6 @@ void move_alien(Entity* alien);
 
 // --- CREATION FUNCTIONS ---
 Entity initialize_player();
-Entity CreateAlien();
 
 #endif // PLAYER_H
 

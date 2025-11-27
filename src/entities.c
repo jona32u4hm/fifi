@@ -25,6 +25,7 @@ void add_projectile(entity_array* arr, Entity* player) {
         .current_texture = LoadTexture("assets/pixelart/projectile.png"),
         .hp = 1.0f,
         .i_time = 0.0f,
+        .type = PROJECTILE,
         .dest_rect = (Rectangle){
             .x = player->dest_rect.x + 4,
             .y = player->dest_rect.y + 4,
@@ -63,6 +64,42 @@ void move_projectile(Entity* proj) {
 
 }
 
+Entity CreateAlien(int type) {
+    // Load textures
+    Texture2D alien_up   = LoadTexture("assets/pixelart/alien_up.png");
+    Texture2D alien_side = LoadTexture("assets/pixelart/alien_side_0.png");
+    Texture2D alien_down = LoadTexture("assets/pixelart/alien_down.png");
+
+    // Initialize texture struct
+    Textures alien_textures = (Textures){
+        .texture_up = alien_up,
+        .texture_side = alien_side,
+        .texture_down = alien_down,
+    };
+
+    // Create and return the fully initialized entity
+    Entity alien = (Entity){
+        .vertical_direction = 1,
+        .horizontal_direction = 1,
+        .current_direction = 2,
+        .textures = alien_textures,
+        .current_texture = alien_textures.texture_down,
+        .hp = 100.0f,
+        .i_time = 0.0f,
+        .type = type,
+        .dest_rect = (Rectangle){
+            .x = 85,
+            .y = 50,
+            .width = 16,
+            .height = 16,
+        },
+    };
+
+    return alien;
+}
+
+
+
 Entity initialize_melee() {
     Textures melee_textures = (Textures){
     .texture_up = LoadTexture("assets/pixelart/melee_up.png"),
@@ -78,6 +115,7 @@ Entity initialize_melee() {
         .current_texture = melee_textures.texture_side,
         .hp = 0.0f,
         .i_time = 0.0f,
+        .type = MELEE,
         .dest_rect = (Rectangle){
             .x = 0,
             .y = 0,

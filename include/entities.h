@@ -10,8 +10,15 @@
 #define MIN_TIME_PROJ 1.0f
 #define MIN_TIME_MELEE 0.5f
 #define LIFE_TIME_MELEE 0.5f
-#define MAX_I_TIME 0.6            //Inmunity time for entities, must be greater than LIFE_TIME_MELEE
+#define MAX_I_TIME 0.6            //Inmunity time for aliens, must be greater than LIFE_TIME_MELEE
+#define PLAYER_MAX_I_TIME 1.0f
+#define ALIEN_DAMAGE 20           //Damage dealt by aliens to player
 
+#define PLAYER 1
+#define DUMMY_ALIEN 2
+#define ALIEN_GUARD 3
+#define PROJECTILE 4
+#define MELEE 5
 
 
 #include <raylib.h> //The textures struct will be included inside the entity struct 
@@ -32,6 +39,7 @@ typedef struct Entity {
     Texture2D current_texture; //Says what texture will be drawn 
     Rectangle dest_rect; 
     unsigned char state;
+    int type;
     //for future versions there should be an enemy type flag
 } Entity; 
 
@@ -50,5 +58,7 @@ Entity initialize_melee();
 void spawn_melee(Entity* melee, Entity* player);
 void colision_projectile_alien(Entity* alien, entity_array* proj_array);
 void colision_melee_alien(Entity* alien, Entity* melee);
+Entity CreateAlien(int type);
+
 #endif
 
