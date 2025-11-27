@@ -11,6 +11,7 @@
 #include "game_data.h"
 #include "logo_screen.h"
 #include "splash_screen.h"
+#include "colisions.h"
 #include "map_render.h"
 #include "update_entities.h"
 #include "entities.h"
@@ -56,7 +57,6 @@ int main(void){
 
     Entity player = initialize_player();
     Entity alien = CreateAlien();
-    Entity wuwa = CreateAlien();
     Entity melee = initialize_melee();
 
     entity_array proj_array = init_ent_array(PROJECTILE_CAP);
@@ -118,7 +118,7 @@ int main(void){
 
 
                 break;
-            case PLAYING://------------------------------------------------main playing loop------------------------------------
+            case PLAYING:
 			{
 					float oldX = player.dest_rect.x;
 					float oldY = player.dest_rect.y;
@@ -127,8 +127,7 @@ int main(void){
 					BeginMode2D(camera);
 					ClearBackground(BLACK);
                     renderMap(currentLevel, floorTile, wallTile);
-					update_entities(&camera, &player, &alien, &wuwa, &melee, &proj_array, &cooldown_proj, &cooldown_melee);
-
+					update_entities(&camera, &player, &alien, &melee, &proj_array, &cooldown_proj, &cooldown_melee);
 
 					if (CheckPlayerCollision(currentLevel, &player)) { //collision for player
 						player.dest_rect.x=oldX;
@@ -138,12 +137,17 @@ int main(void){
 						alien.dest_rect.x=oldAX;
 						alien.dest_rect.y=oldAY;
 					}
-					
-					
-					
-					//wuwa's routine
-					update_alien_guard(&wuwa, &player, currentLevel);
-					
+
+					if (CheckPlayerEnemyCollision(&player, &alien)) {
+						player.dest_rect.x=oldX;
+						player.dest_rect.y=oldY;
+
+					}
+					if (CheckPlayerEnemyCollision(&player, &alien)) {
+						alien.dest_rect.x=oldAX;
+						alien.dest_rect.y=oldAY;
+
+					}
             		EndMode2D();
 					camera.offset = (Vector2) { GAME_WIDTH/2, GAME_HEIGHT/2};
 					camera.target= (Vector2) {
@@ -151,7 +155,7 @@ int main(void){
 						player.dest_rect.y + player.dest_rect.height/2
 					};
 			}
-                break;//-------------------------------------------------------------------------------------------------------
+                break;
             case PAUSED:
                 break;
             case GAMEOVER:
