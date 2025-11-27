@@ -135,7 +135,7 @@ int main(void){
 					ClearBackground(BLACK);
                     renderMap(currentLevel, floorTile, wallTile);
                     printf("\nMelee hp before updating: %f\n", melee.hp);
-					update_entities(&camera, &player, &alien, &alien2, &melee, &proj_array, &cooldown_proj, &cooldown_melee, currentLevel);
+					update_entities(&camera, &player, &alien, &alien2, &patro1_alien, &melee, &proj_array, &cooldown_proj, &cooldown_melee, currentLevel);
                     
 					if (CheckPlayerCollision(currentLevel, &player)) { //collision for player
 						player.dest_rect.x=oldX;
