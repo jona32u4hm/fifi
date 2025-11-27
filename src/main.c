@@ -43,8 +43,8 @@ int main(void){
     InitWindow(screenWidth, screenHeight, "FINDING FIFI");
     SetTargetFPS(30);
 	
-	RenderTexture2D target = LoadRenderTexture(GAME_WIDTH, GAME_HEIGHT);	//la pantalla virtual de baja resolución
-    SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);    // para evitar que se vea borroso
+	RenderTexture2D target = LoadRenderTexture(GAME_WIDTH, GAME_HEIGHT);
+    SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);    
     
     
     GameState currentState = LOGO; //game_data.h

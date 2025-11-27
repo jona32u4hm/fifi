@@ -5,34 +5,35 @@
 #include <math.h>
 #include "game_data.h"
 #include "colision_wall.h"
+#define PLAYER_SPEED 40
 
 //move_player changes player position, direction and current texture
 void move_player(Entity* player, Camera2D* camera) {
     if (IsKeyDown(KEY_W)){
-        player->dest_rect.y += -20 * GetFrameTime();
+        player->dest_rect.y += -PLAYER_SPEED * GetFrameTime();
         player->current_texture = player->textures.texture_up;
-	    camera->target.y += -20 * GetFrameTime();
+	    camera->target.y += -PLAYER_SPEED * GetFrameTime();
 	    player->vertical_direction = 1;
 	    player->current_direction = UP;
     }
     if (IsKeyDown(KEY_A)){
-        player->dest_rect.x += -20* GetFrameTime();
+        player->dest_rect.x += -PLAYER_SPEED* GetFrameTime();
         player->current_texture = player->textures.texture_side;
-	    camera->target.x += -20 * GetFrameTime();
+	    camera->target.x += -PLAYER_SPEED * GetFrameTime();
 	    player->horizontal_direction = 1;
 	    player->current_direction = LEFT;
     }
     if (IsKeyDown(KEY_S)){
-        player->dest_rect.y += 20 * GetFrameTime();
+        player->dest_rect.y += PLAYER_SPEED * GetFrameTime();
         player->current_texture = player->textures.texture_down;
-	    camera->target.y += 20 * GetFrameTime();
+	    camera->target.y += PLAYER_SPEED * GetFrameTime();
 	    player->vertical_direction = -1;
 	    player->current_direction = DOWN;
     }
     if (IsKeyDown(KEY_D)){
-        player->dest_rect.x += 20 * GetFrameTime();
+        player->dest_rect.x += PLAYER_SPEED * GetFrameTime();
         player->current_texture = player->textures.texture_side;
-	    camera->target.x += 20 * GetFrameTime();
+	    camera->target.x += PLAYER_SPEED * GetFrameTime();
 	    player->horizontal_direction = -1;
 	    player->current_direction = RIGHT;
     }

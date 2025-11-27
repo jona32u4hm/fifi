@@ -23,7 +23,6 @@ Camera2D initialize_camera() {
 void update_entities(Camera2D* camera, Entity* player, entity_array* aliens_array, Entity* melee, entity_array* proj_array, float* cooldown_proj, float* cooldown_melee, LevelData* currentLevel) {
     
     //Varaibles for colissions with walls
-
     float oldX = player->dest_rect.x;
 	float oldY = player->dest_rect.y;
 
@@ -44,7 +43,6 @@ void update_entities(Camera2D* camera, Entity* player, entity_array* aliens_arra
 
     //Colisions for player with walls
     if (CheckPlayerCollision(currentLevel, player)) {
-        printf("Debug: colision detected");
         player->dest_rect.x=oldX;
         player->dest_rect.y=oldY;
     }
@@ -80,6 +78,10 @@ void update_entities(Camera2D* camera, Entity* player, entity_array* aliens_arra
     float oldAX;
     float oldAY;
     for (int i = 0; i < aliens_array->size; i++) {
+        if ((aliens_array->data + i)->hp <= 0) {
+            continue;
+        }
+
     	oldAX = (aliens_array->data + i)->dest_rect.x;
         oldAY = (aliens_array->data + i)->dest_rect.y; 
 
@@ -110,12 +112,15 @@ void update_entities(Camera2D* camera, Entity* player, entity_array* aliens_arra
             (aliens_array->data + i)->dest_rect.x=oldAX;
             (aliens_array->data + i)->dest_rect.y=oldAY;
         }
-        if (CheckPlayerEnemyCollision(player, aliens_array->data + i) && player->i_time <= 0) {
+        if (CheckCollisionRecs(player->dest_rect, (aliens_array->data + i)->dest_rect) && player->i_time <= 0) {
+            printf("\nPlayer received damage\n");
             player->hp -= ALIEN_DAMAGE;
+            printf("\nPlayer received damage\n");
             player->i_time = MAX_I_TIME;
         }
     }
         player->i_time -= GetFrameTime();
-           
+        printf("\n%f\n", player->hp);
+
 }
 

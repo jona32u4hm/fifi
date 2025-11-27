@@ -176,25 +176,34 @@ void spawn_melee(Entity* melee, Entity* player) {
 
 void colision_projectile_alien(Entity* alien, entity_array* proj_array) {
     for (int i = 0; i < proj_array->size; i++) {
-        if (CheckCollisionRecs(alien->dest_rect, ((*(proj_array)).data + i)->dest_rect) && alien->hp > 0) {
+
+        if (CheckCollisionRecs(alien->dest_rect, proj_array->data[i].dest_rect)
+            && alien->hp > 0) {
+
+            // Aplicar daño
             alien->hp -= 20;
             alien->i_time = MAX_I_TIME;
-            ((*proj_array).data + i)->hp = 0;
-            (proj_array->size)--;
-            for (int j = i; i <  (*proj_array).size; i++){
-                *((*proj_array).data + j) = *((*proj_array).data + j + 1);
+
+            // Eliminar proyectil
+            proj_array->size--;
+
+            // Compactar el array
+            for (int j = i; j < proj_array->size; j++) {
+                proj_array->data[j] = proj_array->data[j + 1];
             }
+
+            // Ajustar índice para evaluar el proyectil que se movió a 'i'
+            i--;
         }
     }
-    return;
 }
+
 void colision_melee_alien(Entity* alien, Entity* melee) {
     if (CheckCollisionRecs(alien->dest_rect, melee->dest_rect) && alien->hp) {
         alien->hp -= 40;
         alien->i_time = MAX_I_TIME;
     }
 }
-
 void move_alien_patrol(Entity* alien) {
     const float speed = 20.0f;
     float delta = speed * GetFrameTime();

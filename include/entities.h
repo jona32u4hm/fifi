@@ -45,6 +45,10 @@ typedef struct Entity {
     unsigned char state;
     int type;
     //for future versions there should be an enemy type flag
+    int patrol_direction;
+    int patrol_counter;
+    int patrol_limit;
+    int patrol_start_x;
 } Entity; 
 
 typedef struct entity_array {
