@@ -13,7 +13,7 @@
 #define LIFE_TIME_MELEE 0.5f
 #define MAX_I_TIME 0.6            //Inmunity time for aliens, must be greater than LIFE_TIME_MELEE
 #define PLAYER_MAX_I_TIME 1.0f
-#define ALIEN_DAMAGE 20           //Damage dealt by aliens to player
+#define ALIEN_DAMAGE 2           //Damage dealt by aliens to player
 
 //Define enemy types
 #define PLAYER 1

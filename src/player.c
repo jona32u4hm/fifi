@@ -135,7 +135,7 @@ Entity initialize_player() {
         .current_direction = 3,
         .textures = player_textures,
         .current_texture = player_textures.texture_down,
-        .hp = 100.0f,
+        .hp = 10.0f,
         .i_time = 0.0f,
         .type = PLAYER,
         .dest_rect = (Rectangle){

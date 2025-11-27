@@ -31,7 +31,7 @@ Entity CreateAlien(int type, float x, float y) {
         .current_direction = 2,
         .textures = alien_textures,
         .current_texture = alien_textures.texture_down,
-        .hp = 100.0f,
+        .hp = 10.0f,
         .i_time = 0.0f,
         .type = type,
         .dest_rect = (Rectangle){
@@ -180,19 +180,15 @@ void colision_projectile_alien(Entity* alien, entity_array* proj_array) {
         if (CheckCollisionRecs(alien->dest_rect, proj_array->data[i].dest_rect)
             && alien->hp > 0) {
 
-            // Aplicar daño
-            alien->hp -= 20;
+            alien->hp -= 2;
             alien->i_time = MAX_I_TIME;
 
-            // Eliminar proyectil
             proj_array->size--;
 
-            // Compactar el array
             for (int j = i; j < proj_array->size; j++) {
                 proj_array->data[j] = proj_array->data[j + 1];
             }
 
-            // Ajustar índice para evaluar el proyectil que se movió a 'i'
             i--;
         }
     }
@@ -200,7 +196,7 @@ void colision_projectile_alien(Entity* alien, entity_array* proj_array) {
 
 void colision_melee_alien(Entity* alien, Entity* melee) {
     if (CheckCollisionRecs(alien->dest_rect, melee->dest_rect) && alien->hp) {
-        alien->hp -= 40;
+        alien->hp -= 4;
         alien->i_time = MAX_I_TIME;
     }
 }

@@ -113,9 +113,7 @@ void update_entities(Camera2D* camera, Entity* player, entity_array* aliens_arra
             (aliens_array->data + i)->dest_rect.y=oldAY;
         }
         if (CheckCollisionRecs(player->dest_rect, (aliens_array->data + i)->dest_rect) && player->i_time <= 0) {
-            printf("\nPlayer received damage\n");
             player->hp -= ALIEN_DAMAGE;
-            printf("\nPlayer received damage\n");
             player->i_time = MAX_I_TIME;
         }
     }

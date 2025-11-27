@@ -125,22 +125,32 @@ int main(void){
                 break;
             case PLAYING:
 			{
-					BeginMode2D(camera);                    
-                    
-					ClearBackground(BLACK);
+            
+                    BeginMode2D(camera);
+
+                    ClearBackground(BLACK);
                     renderMap(currentLevel, floorTile, wallTile);
-					update_entities(&camera, &player, &aliens_array, &melee, &proj_array, &cooldown_proj, &cooldown_melee, currentLevel);
-                    
+                    update_entities(&camera, &player, &aliens_array, &melee, &proj_array,
+                                    &cooldown_proj, &cooldown_melee, currentLevel);
+
                     EndMode2D();
-                    
-					camera.offset = (Vector2) { GAME_WIDTH/2, GAME_HEIGHT/2};
-					camera.target= (Vector2) {
-						player.dest_rect.x+player.dest_rect.width/2,
-						player.dest_rect.y + player.dest_rect.height/2
-					};
+
+                    DrawText("HP:", 5, 5, 10, BLACK);
+
+                    for (int i = 0; i < player.hp; i++) {
+                        DrawRectangle(40 + 12 * i, 5, 10, 10, RED);
+                    }
+
+                    camera.offset = (Vector2){ GAME_WIDTH/2, GAME_HEIGHT/2 };
+                    camera.target = (Vector2){
+                        player.dest_rect.x + player.dest_rect.width/2,
+                        player.dest_rect.y + player.dest_rect.height/2
+                    };
+
                     if (player.hp <= 0) {
                         currentState = GAMEOVER;
-                    }   
+                    }
+
 			}
                 break;
             case PAUSED:
