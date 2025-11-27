@@ -12,6 +12,8 @@
 #define LIFE_TIME_MELEE 0.5f
 #define MAX_I_TIME 0.6            //Inmunity time for entities, must be greater than LIFE_TIME_MELEE
 
+
+
 #include <raylib.h> //The textures struct will be included inside the entity struct 
 typedef struct Textures { 
     Texture2D texture_up; 
@@ -29,6 +31,8 @@ typedef struct Entity {
     float i_time;
     Texture2D current_texture; //Says what texture will be drawn 
     Rectangle dest_rect; 
+    unsigned char state;
+    //for future versions there should be an enemy type flag
 } Entity; 
 
 typedef struct entity_array {
