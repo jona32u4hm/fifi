@@ -82,7 +82,7 @@ int main(void){
     Texture2D gameOver = LoadTexture("assets/pixelart/GameOver.png");
 	SetTextureFilter(logoTexture, TEXTURE_FILTER_POINT);
     
-    if (proj_array == NULL || aliens_array ==  NULL) {
+    if (proj_array.data == NULL || aliens_array.data ==  NULL) {
         printf("Memory error");
         currentState = GAMEOVER;
     }

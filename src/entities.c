@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "entities.h"
 
+// init_ent_array initializes an entity_array struct
 entity_array init_ent_array(int capacity) {
     entity_array ent_array = (entity_array) {
         .cap = capacity,
@@ -14,6 +15,8 @@ entity_array init_ent_array(int capacity) {
     return ent_array;
 }
 
+//CreateAlien returns an Entity struct with alien characteristics.
+//type is the alien type, x and y are the initial position
 Entity CreateAlien(int type, float x, float y) {
     // Load textures
     Texture2D alien_up   = LoadTexture("assets/pixelart/alien_up.png");
@@ -49,6 +52,7 @@ Entity CreateAlien(int type, float x, float y) {
     return alien;
 }
 
+//add_alien crates an alien and puts it into an array
 void add_alien(entity_array* arr, int type, float xposition, float yposition) {
     if (arr->size >= arr->cap) {
         printf("Error: array full\n");
@@ -58,7 +62,7 @@ void add_alien(entity_array* arr, int type, float xposition, float yposition) {
     arr->size++;
 
 }
-
+//add_projectile creates a projectile and puts it into an array
 void add_projectile(entity_array* arr, Entity* player) {
     if (arr->size >= arr->cap) {
         printf("Error: array full\n");
@@ -86,7 +90,7 @@ void add_projectile(entity_array* arr, Entity* player) {
     arr->size++;
 }
 
-
+//move_projectile updates a projectile position
 void move_projectile(Entity* proj) {
     switch (proj->current_direction) {
     case UP:
@@ -113,7 +117,8 @@ void move_projectile(Entity* proj) {
 }
 
 
-
+//initialize_melee initializes an entity struc wirch melee characteristics
+//the melee after this cannot be used but is necessary to initialize it for function spawn_melee
 Entity initialize_melee() {
     Textures melee_textures = (Textures){
     .texture_up = LoadTexture("assets/pixelart/melee_up.png"),
@@ -140,6 +145,7 @@ Entity initialize_melee() {
     return melee;
 }
 
+//spawn_melee makes melee spawn so that it can be used
 void spawn_melee(Entity* melee, Entity* player) {
     melee->hp = LIFE_TIME_MELEE;
     melee->vertical_direction = player->vertical_direction;
@@ -177,6 +183,7 @@ void spawn_melee(Entity* melee, Entity* player) {
     }
 }
 
+//colision_projectile_alien checks if a projectile touches an enemy
 void colision_projectile_alien(Entity* alien, entity_array* proj_array) {
     for (int i = 0; i < proj_array->size; i++) {
 
@@ -197,12 +204,15 @@ void colision_projectile_alien(Entity* alien, entity_array* proj_array) {
     }
 }
 
+//colision_melee_alien checks if melee touches an alien
 void colision_melee_alien(Entity* alien, Entity* melee) {
     if (CheckCollisionRecs(alien->dest_rect, melee->dest_rect) && alien->hp) {
         alien->hp -= 4;
         alien->i_time = MAX_I_TIME;
     }
 }
+
+//movement for alien type patrol
 void move_alien_patrol(Entity* alien) {
     const float speed = 20.0f;
     float delta = speed * GetFrameTime();
@@ -225,3 +235,6 @@ void move_alien_patrol(Entity* alien) {
         }
     }
 }
+
+
+

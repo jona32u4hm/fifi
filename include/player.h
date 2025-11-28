@@ -11,12 +11,10 @@
 // alien guard parameters:
 #define PLAYER_FOLLOW_RANGE 3*16
 
-//alien guard:
-void move_alien_guard(Entity* alien, Entity* player, LevelData* currentLevel);
- 
 
 // --- MOVEMENT FUNCTIONS ---
 void move_player(Entity* player, Camera2D* camera);
+void move_alien_guard(Entity* alien, Entity* player, LevelData* currentLevel);
 
 // --- CREATION FUNCTIONS ---
 Entity initialize_player();

@@ -52,12 +52,14 @@ typedef struct Entity {
     int patrol_start_x;
 } Entity; 
 
+//entity_array is an strcut that contains an array with entities inside
 typedef struct entity_array {
     Entity* data;
     int size;
     int cap;
 } entity_array;
 
+//all function references
 entity_array init_ent_array(int capacity);
 Entity CreateAlien(int type, float x, float y);
 void add_alien(entity_array* arr, int type, float xposition, float yposition);

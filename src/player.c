@@ -39,9 +39,46 @@ void move_player(Entity* player, Camera2D* camera) {
     }
 }
 
-void move_alien_guard(Entity* alien, Entity* player, LevelData* currentLevel) {
-//for future versions, enemy type should be checked before running this routine
 
+
+
+//initialize_player initializes the player entity
+Entity initialize_player() {
+    // Loading player textures
+    Texture2D player_up   = LoadTexture("assets/pixelart/t_up_0.png");
+    Texture2D player_down = LoadTexture("assets/pixelart/t_down_0.png");
+    Texture2D player_side = LoadTexture("assets/pixelart/t_side_0.png");
+
+    // Create texture container
+    Textures player_textures = (Textures){
+        .texture_up = player_up,
+        .texture_down = player_down,
+        .texture_side = player_side,
+    };
+
+    // Create player
+    Entity player = (Entity){
+        .vertical_direction = 1,
+        .horizontal_direction = 1,
+        .current_direction = 3,
+        .textures = player_textures,
+        .current_texture = player_textures.texture_down,
+        .hp = 10.0f,
+        .i_time = 0.0f,
+        .type = PLAYER,
+        .dest_rect = (Rectangle){
+            .x = 50,
+            .y = 50,
+            .width = 16,
+            .height = 16,
+        },
+    };
+
+    return player;
+}
+
+//move_alien_guard changes alien position
+void move_alien_guard(Entity* alien, Entity* player, LevelData* currentLevel) {
 	//check player in range?
 	unsigned char range = 0; 
 	if ( sqrt( pow(player->dest_rect.x - alien->dest_rect.x,2) + pow(player->dest_rect.y - alien->dest_rect.y,2) ) < PLAYER_FOLLOW_RANGE){
@@ -110,43 +147,6 @@ void move_alien_guard(Entity* alien, Entity* player, LevelData* currentLevel) {
 		return;
 	}
 	alien->state = 0;
-}
-
-
-
-
-Entity initialize_player() {
-    // Loading player textures
-    Texture2D player_up   = LoadTexture("assets/pixelart/t_up_0.png");
-    Texture2D player_down = LoadTexture("assets/pixelart/t_down_0.png");
-    Texture2D player_side = LoadTexture("assets/pixelart/t_side_0.png");
-
-    // Create texture container
-    Textures player_textures = (Textures){
-        .texture_up = player_up,
-        .texture_down = player_down,
-        .texture_side = player_side,
-    };
-
-    // Create player
-    Entity player = (Entity){
-        .vertical_direction = 1,
-        .horizontal_direction = 1,
-        .current_direction = 3,
-        .textures = player_textures,
-        .current_texture = player_textures.texture_down,
-        .hp = 10.0f,
-        .i_time = 0.0f,
-        .type = PLAYER,
-        .dest_rect = (Rectangle){
-            .x = 50,
-            .y = 50,
-            .width = 16,
-            .height = 16,
-        },
-    };
-
-    return player;
 }
 
 
