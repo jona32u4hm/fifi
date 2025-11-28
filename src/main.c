@@ -62,12 +62,11 @@ int main(void){
     entity_array proj_array = init_ent_array(PROJECTILE_CAP);
     entity_array aliens_array = init_ent_array(ALIENS_CAP);  
 
-    //Adding enemies
+    //Adding enemies. For modularity, in future versions this information would be in an external file
     add_alien(&aliens_array, ALIEN_PATROL, 85, 50);
     add_alien(&aliens_array, ALIEN_PATROL, 80, 160);
     add_alien(&aliens_array, ALIEN_PATROL, 80, 400);
     add_alien(&aliens_array, ALIEN_GUARD, 80, 360);
-
     add_alien(&aliens_array, ALIEN_PATROL, 270, 35);
     add_alien(&aliens_array, ALIEN_GUARD, 300, 84);
     add_alien(&aliens_array, ALIEN_GUARD, 400, 82);
