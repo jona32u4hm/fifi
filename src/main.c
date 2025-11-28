@@ -81,7 +81,11 @@ int main(void){
 	logoTexture = LoadTexture("assets/pixelart/logo.png");
     Texture2D gameOver = LoadTexture("assets/pixelart/GameOver.png");
 	SetTextureFilter(logoTexture, TEXTURE_FILTER_POINT);
-
+    
+    if (proj_array == NULL || aliens_array ==  NULL) {
+        printf("Memory error");
+        currentState = GAMEOVER;
+    }
     while (!WindowShouldClose()){
 
 	//dibujar sobre pantalla virtual:
@@ -89,26 +93,26 @@ int main(void){
         switch (currentState){
             //main game code
             case LOGO:
-                        UpdateLogoScreen(&timer, &alpha, &currentState, &logoTexture);
-                        ClearBackground(BLACK);
-                        // Create a color with the calculated alpha value (0 to 255)
-                        alphaByte = (int)(alpha * 255.0f);
-                        Color logoColor = { 255, 255, 255, alphaByte }; // White color with current alpha
-						DrawTexture(logoTexture, 
-								    (GAME_WIDTH/2) - (logoTexture.width/2), 
-								    (GAME_HEIGHT/2) - (logoTexture.height/2), 
-								    logoColor);
+                    UpdateLogoScreen(&timer, &alpha, &currentState, &logoTexture);
+                    ClearBackground(BLACK);
+                    // Create a color with the calculated alpha value (0 to 255)
+                    alphaByte = (int)(alpha * 255.0f);
+                    Color logoColor = { 255, 255, 255, alphaByte }; // White color with current alpha
+                    DrawTexture(logoTexture, 
+                                (GAME_WIDTH/2) - (logoTexture.width/2), 
+                                (GAME_HEIGHT/2) - (logoTexture.height/2), 
+                                logoColor);
                 break;
             case SPLASH:
-            			UpdateSplashScreen(&timer, &alpha, &currentState, &splashTexture, &splashState);
-                        ClearBackground(BLACK);
-                        // Create a color with the calculated alpha value (0 to 255)
-                        alphaByte = (int)(alpha * 255.0f);
-                        Color splashColor = { 255, 255, 255, alphaByte }; // White color with current alpha
-						DrawTexture(splashTexture, 
-								    (GAME_WIDTH/2) - (splashTexture.width/2), 
-								    (GAME_HEIGHT/2) - (splashTexture.height/2), 
-								    splashColor);
+                    UpdateSplashScreen(&timer, &alpha, &currentState, &splashTexture, &splashState);
+                    ClearBackground(BLACK);
+                    // Create a color with the calculated alpha value (0 to 255)
+                    alphaByte = (int)(alpha * 255.0f);
+                    Color splashColor = { 255, 255, 255, alphaByte }; // White color with current alpha
+                    DrawTexture(splashTexture, 
+                                (GAME_WIDTH/2) - (splashTexture.width/2), 
+                                (GAME_HEIGHT/2) - (splashTexture.height/2), 
+                                splashColor);
                 break;
             case LOADING:
             		//copy next level's structure to currentLevel

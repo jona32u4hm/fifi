@@ -19,14 +19,12 @@ Camera2D initialize_camera() {
 }
 
 
-
+//update_entities is in charge of updating all entities value when an event happens
 void update_entities(Camera2D* camera, Entity* player, entity_array* aliens_array, Entity* melee, entity_array* proj_array, float* cooldown_proj, float* cooldown_melee, LevelData* currentLevel) {
     
     //Varaibles for colissions with walls
     float oldX = player->dest_rect.x;
 	float oldY = player->dest_rect.y;
-
-
 
     //Cooldown should charge over time if not full
     if (*cooldown_proj < MIN_TIME_PROJ) {

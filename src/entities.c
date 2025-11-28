@@ -8,6 +8,9 @@ entity_array init_ent_array(int capacity) {
         .data = malloc(capacity * sizeof(Entity)),
         .size = 0,
     };
+    if (ent_array.data == NULL) {
+        printf("Error: puntero nulo\n");
+    }
     return ent_array;
 }
 
