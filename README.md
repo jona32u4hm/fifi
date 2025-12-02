@@ -1,4 +1,4 @@
-# Proyecto Programación bajo Plataformas Abiertas: Videojusgo escrito en C con la biblioteca Raylib
+# Proyecto Programación bajo Plataformas Abiertas: Videojuego escrito en C con la biblioteca Raylib
 
 ## 1. Descripción del Proyecto
 Este repositorio contiene el código fuente del proyecto final para el curso de Programación Bajo Plataformas Abiertas, que consiste en un juego de combate con perspectiva top-down 2D. El objetivo principal fue crear una primera demostración del juego, que sea una base sólida si se quisiera expandir el juego y añadir niveles. El tema del juego está amboientado dentro de una nave espacial alienígena, después que los aliens secuestran a fifi, el gato del personaje principal. 
